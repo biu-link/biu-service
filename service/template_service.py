@@ -10,5 +10,9 @@ class TemplateService:
         self.db = Db()
 
     def get_template(self, lang, name):
-        template = self.db.single(f"select * from ba_default_template where lang = '{lang}' and name = '{name}'")
-        print(template)
+        template = self.db.single(f"select * from ba_default_template where lang = %(lang)s and name = %(name)s",
+                                  {
+                                      'lang': lang,
+                                      'name': name
+                                  })
+        return template
