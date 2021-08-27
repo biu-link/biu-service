@@ -1,0 +1,13 @@
+[common]
+
+
+[mysql]
+host = 
+db_name = biu
+user = biu
+password = 
+port = 
+
+[redis]
+host=
+port=
