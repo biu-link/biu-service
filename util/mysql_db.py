@@ -1,38 +1,40 @@
 # -*- coding: utf-8 -*-
 
 import util.tools as tools
-
 import pymysql
+
+from common.singleton import Singleton
 from dbutils.pooled_db import PooledDB
 
 
-class Db:
+class MysqlDB(metaclass=Singleton):
     __pool = None
     __conn = None
     __cursor = None
 
     def __init__(self):
-        self.__conn = Db.__get_conn()
+        super(MysqlDB, self).__init__()
+        self.__conn = MysqlDB.__get_conn()
         self.__cursor = self.__conn.cursor()
 
     @staticmethod
     def __get_conn():
-        if Db.__pool is None:
+        if MysqlDB.__pool is None:
             cfg = tools.get_config_section('mysql')
-            Db.__pool = PooledDB(creator=pymysql,
-                                 mincached=1,
-                                 maxcached=20,
-                                 host=cfg.get('host'),
-                                 port=cfg.get('port'),
-                                 user=cfg.get('user'),
-                                 passwd=cfg.get('password'),
-                                 db=cfg.get('db_name'),
-                                 use_unicode=True,
-                                 charset='utf8mb4',
-                                 cursorclass=pymysql.cursors.DictCursor,
-                                 setsession=['SET AUTOCOMMIT = 1']
-                                 )
-        return Db.__pool.connection()
+            MysqlDB.__pool = PooledDB(creator=pymysql,
+                                      mincached=1,
+                                      maxcached=20,
+                                      host=cfg.get('host'),
+                                      port=cfg.get('port'),
+                                      user=cfg.get('user'),
+                                      passwd=cfg.get('password'),
+                                      db=cfg.get('db_name'),
+                                      use_unicode=True,
+                                      charset='utf8mb4',
+                                      cursorclass=pymysql.cursors.DictCursor,
+                                      setsession=['SET AUTOCOMMIT = 1']
+                                      )
+        return MysqlDB.__pool.connection()
 
     def __execute(self, sql, param=None):
         """
