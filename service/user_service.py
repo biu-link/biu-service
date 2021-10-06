@@ -22,9 +22,11 @@ class UserService(metaclass=Singleton):
         super(UserService, self).__init__()
 
     def get_user_by_email(self, email):
-        user = User()
+        user = None
         row = MongoDB().select_one('user', {'email': email})
-        user.deserialize(row)
+        if row:
+            user = User()
+            user.deserialize(row)
         return user
 
     def exchange_user_info(self, code):
