@@ -2,6 +2,9 @@
 
 import os
 
+# 需要安装 pyyaml 模块
+import yaml
+from jinja2 import Environment, PackageLoader
 
 class LocalCodeGen:
 
@@ -44,30 +47,31 @@ class LocalCodeGen:
         return word
 
 
-def gen_code_by_table():
-    obj = LocalCodeGen()
+def gen_code_by_var_list():
+    var_list = 'secretId,secretToken,orderNo,companyName,supplierName,currency,systemFile,supplierFile,memo'
 
-    table_names = [
-        ('app', '第三方 App '),
-        ('company', '公司'),
-        ('supplier', '供应商'),
-        ('template', '模板'),
-        ('template_relation', '模板关联关系'),
-        ('rules_relation', '规则关系'),
-        ('special_relation', '特殊规则关系'),
-        ('special_rules', '特殊规则'),
-        ('corresponding_field', '字段对应'),
-        ('reconciliation', '对账记录'),
-        ('reconciliation_file', '对账文件'),
-    ]
-    template_root = r'D:\project\rpa\template_file'
-    template_list = [
-        ('controller.tpl', r'rpa-api\src\main\java\com\code\flag\controller\${table_name_pascal}Controller.java'),
-        ('mapper.tpl', r'rpa-dao\src\main\java\com\code\flag\mapper\Rpa${table_name_pascal}Mapper.java'),
-        ('service_interface.tpl', r'rpa-service\src\main\java\com\code\flag\base\${table_name_pascal}Service.java'),
-        ('service_impl.tpl', r'rpa-service\src\main\java\com\code\flag\base\impl\${table_name_pascal}ServiceImpl.java'),
-    ]
-    source_root = r'D:\project\rpa\source\rpa-platform'
+    for var in var_list.split(','):
+        # print(f'@RequestParam("{var}") String {var},')
+        print(f'{var}:{var}')
+
+
+def gen_code(template_root):
+    with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
+        setting = yaml.load(f, Loader=yaml.CLoader)
+
+    print(setting)
+
+    table_names = []
+    for item in setting['table_names']:
+        table_names.append((item[0], item[1]))
+
+    template_list = []
+    for item in setting['template_list']:
+        template_list.append((item[0], item[1]))
+
+    source_root = setting['source_root']
+
+    obj = LocalCodeGen()
 
     for template in template_list:
         template_name = template[0]
@@ -85,15 +89,14 @@ def gen_code_by_table():
             print(f'{template_name} -- {table_name}  completed')
 
 
-def gen_code_by_var_list():
-    var_list = 'secretId,secretToken,orderNo,companyName,supplierName,currency,systemFile,supplierFile,memo'
-
-    for var in var_list.split(','):
-        # print(f'@RequestParam("{var}") String {var},')
-        print(f'{var}:{var}')
-
-
 if __name__ == '__main__':
-    gen_code_by_table()
+    # gen_code_by_table()
 
     # gen_code_by_var_list()
+
+    # rpa-platform 模板
+    # src = r'D:\project\rpa\template_file'
+
+    # rpa-cloud 模板
+    src = r'D:\project\rpa\source\rpa-cloud\template_file'
+    gen_code(src)
