@@ -4,21 +4,29 @@ import os
 
 # 需要安装 pyyaml 模块
 import yaml
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
+
+
+def camel_word(word=''):
+    words = word.lower().split('_')
+    for i in range(1, len(words)):
+        w = words[i]
+        words[i] = w[0].upper() + w[1:]
+    return ''.join(words)
+
+
+def pascal_word(word=''):
+    word = camel_word(word)
+    word = word[0].upper() + word[1:]
+    return word
+
 
 class LocalCodeGen:
 
-    def gen_code(self, table_name, table_name_chinese, template, save_path):
-        table_name_pascal = self.pascal_word(table_name)
-        table_name_camel = self.camel_word(table_name)
+    def save_code(self, code, save_path, **kwargs):
 
-        result = template.replace('${table_name}', table_name)
-        result = result.replace('${table_name_chinese}', table_name_chinese)
-        result = result.replace('${table_name_pascal}', table_name_pascal)
-        result = result.replace('${table_name_camel}', table_name_camel)
-
-        save_path = save_path.replace('${table_name}', table_name)
-        save_path = save_path.replace('${table_name_pascal}', table_name_pascal)
+        save_path = save_path.replace('${table_name}', kwargs['table_name'])
+        save_path = save_path.replace('${table_name_pascal}', kwargs['table_name_pascal'])
 
         if os.path.exists(save_path):
             f = open(save_path, 'r', encoding='utf-8')
@@ -26,25 +34,13 @@ class LocalCodeGen:
             f.close()
 
             flag = '以下内容在重新生成代码时会保留'
-            if result.__contains__(flag) and old_content.__contains__(flag):
-                result = result[0: result.index(flag)]
-                result += old_content[old_content.index(flag):]
+            if code.__contains__(flag) and old_content.__contains__(flag):
+                code = code[0: code.index(flag)]
+                code += old_content[old_content.index(flag):]
 
         f = open(save_path, 'w', encoding='utf-8')
-        f.write(result)
+        f.write(code)
         f.close()
-
-    def camel_word(self, word=''):
-        words = word.lower().split('_')
-        for i in range(1, len(words)):
-            w = words[i]
-            words[i] = w[0].upper() + w[1:]
-        return ''.join(words)
-
-    def pascal_word(self, word=''):
-        word = self.camel_word(word)
-        word = word[0].upper() + word[1:]
-        return word
 
 
 def gen_code_by_var_list():
@@ -71,21 +67,28 @@ def gen_code(template_root):
 
     source_root = setting['source_root']
 
-    obj = LocalCodeGen()
+    codeGen = LocalCodeGen()
 
     for template in template_list:
         template_name = template[0]
         result_file = source_root + '\\' + template[1]
 
-        template_file = template_root + '\\' + template_name
-        f = open(template_file, 'r', encoding='utf8')
-        template_content = f.read()
-        f.close()
+        env = Environment(loader=FileSystemLoader(template_root))
+        jinja_template = env.get_template(template_name)
 
         for table in table_names:
             table_name = table[0]
             table_name_chinese = table[1]
-            obj.gen_code(table_name, table_name_chinese, template_content, result_file)
+
+            args = {
+                'table_name': table_name,
+                'table_name_chinese': table_name_chinese,
+                'table_name_pascal': pascal_word(table_name),
+                'table_name_camel': camel_word(table_name)
+            }
+            code = jinja_template.render(**args)
+            codeGen.save_code(code, result_file, **args)
+
             print(f'{template_name} -- {table_name}  completed')
 
 
