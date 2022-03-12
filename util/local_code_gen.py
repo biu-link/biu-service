@@ -38,6 +38,10 @@ class LocalCodeGen:
                 code = code[0: code.index(flag)]
                 code += old_content[old_content.index(flag):]
 
+        dirname = os.path.dirname(save_path)
+        if not os.path.exists(dirname):
+            os.makedirs(dirname)
+
         f = open(save_path, 'w', encoding='utf-8')
         f.write(code)
         f.close()
@@ -50,10 +54,7 @@ class LocalCodeGen:
         for item in setting['table_names']:
             table_names.append((item[0], item[1]))
 
-        template_list = []
-        for item in setting['template_list']:
-            template_list.append((item[0], item[1]))
-
+        template_list = setting['template_list']
         source_root = setting['source_root']
 
         for table in table_names:
@@ -64,7 +65,9 @@ class LocalCodeGen:
                 'table_name': table_name,
                 'table_name_chinese': table_name_chinese,
                 'table_name_pascal': pascal_word(table_name),
-                'table_name_camel': camel_word(table_name)
+                'table_name_camel': camel_word(table_name),
+                'parent_menu_name': setting['parent_menu_name'],
+                'menu_name': setting['menu_name'],
             }
 
             fields = self.load_fields(template_root + rf'\model\{table_name}.yml')
@@ -72,16 +75,23 @@ class LocalCodeGen:
 
             for template in template_list:
                 template_name = template[0]
-                result_file = source_root + '\\' + template[1]
+                template_output = template[1]
+                template_flag = template[2] if len(template) > 2 else ''
+                result_file = source_root + '\\' + template_output
+
+                if template_flag.__contains__('table_name=') and not template_flag.__contains__('table_name='+table_name):
+                    continue
 
                 env = Environment(loader=FileSystemLoader(template_root))
                 jinja_template = env.get_template(template_name)
 
                 code = jinja_template.render(**args)
-                # print(code)
-                self.save_code(code, result_file, **args)
+                if template_output == 'console':
+                    print(code)
+                else:
+                    self.save_code(code, result_file, **args)
 
-                print(f'{template_name} -- {table_name}  completed')
+                print(f'-- {template_name} -- {table_name}  completed')
 
     def load_fields(self, yml_path):
         with open(yml_path, 'r', encoding='utf-8') as f:
@@ -93,19 +103,35 @@ class LocalCodeGen:
             field_type = field[1] or ''
             comment = field[2]
             flag = field[3] if len(field) > 3 else ''
+            field_length = ''
 
             if field_type.__contains__('('):
-                field_type = field_type[0:field_type.index('(')]
+                field_length = field_type[field_type.index('(')+1:field_type.index(')')]
+                field_type = field_type[0:field_type.index('(')].lower()
+
+            java_type = ''
+            if field_type == 'varchar':
+                java_type = 'String'
+            elif field_type == 'int':
+                java_type = 'Integer'
+            elif field_type == 'bigint':
+                java_type = 'Long'
+            elif field_type == 'datetime':
+                java_type = 'Date'
 
             fields.append({
                 'field_name': field_name,
                 'field_name_pascal': pascal_word(field_name),
                 'field_name_camel': camel_word(field_name),
                 'field_type': field_type,
+                'field_length': field_length,
+                'java_type': java_type,
                 'comment': comment,
                 'flag': flag
             })
 
+        # print(fields)
+        # exit()
         return fields
 
 
