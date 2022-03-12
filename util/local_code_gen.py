@@ -42,39 +42,19 @@ class LocalCodeGen:
         f.write(code)
         f.close()
 
+    def gen_code(self, template_root):
+        with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
+            setting = yaml.load(f, Loader=yaml.CLoader)
 
-def gen_code_by_var_list():
-    var_list = 'secretId,secretToken,orderNo,companyName,supplierName,currency,systemFile,supplierFile,memo'
+        table_names = []
+        for item in setting['table_names']:
+            table_names.append((item[0], item[1]))
 
-    for var in var_list.split(','):
-        # print(f'@RequestParam("{var}") String {var},')
-        print(f'{var}:{var}')
+        template_list = []
+        for item in setting['template_list']:
+            template_list.append((item[0], item[1]))
 
-
-def gen_code(template_root):
-    with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
-        setting = yaml.load(f, Loader=yaml.CLoader)
-
-    print(setting)
-
-    table_names = []
-    for item in setting['table_names']:
-        table_names.append((item[0], item[1]))
-
-    template_list = []
-    for item in setting['template_list']:
-        template_list.append((item[0], item[1]))
-
-    source_root = setting['source_root']
-
-    codeGen = LocalCodeGen()
-
-    for template in template_list:
-        template_name = template[0]
-        result_file = source_root + '\\' + template[1]
-
-        env = Environment(loader=FileSystemLoader(template_root))
-        jinja_template = env.get_template(template_name)
+        source_root = setting['source_root']
 
         for table in table_names:
             table_name = table[0]
@@ -86,10 +66,55 @@ def gen_code(template_root):
                 'table_name_pascal': pascal_word(table_name),
                 'table_name_camel': camel_word(table_name)
             }
-            code = jinja_template.render(**args)
-            codeGen.save_code(code, result_file, **args)
 
-            print(f'{template_name} -- {table_name}  completed')
+            fields = self.load_fields(template_root + rf'\model\{table_name}.yml')
+            args['fields'] = fields
+
+            for template in template_list:
+                template_name = template[0]
+                result_file = source_root + '\\' + template[1]
+
+                env = Environment(loader=FileSystemLoader(template_root))
+                jinja_template = env.get_template(template_name)
+
+                code = jinja_template.render(**args)
+                # print(code)
+                self.save_code(code, result_file, **args)
+
+                print(f'{template_name} -- {table_name}  completed')
+
+    def load_fields(self, yml_path):
+        with open(yml_path, 'r', encoding='utf-8') as f:
+            fields_setting = yaml.load(f, Loader=yaml.CLoader)
+
+        fields = []
+        for field in fields_setting['fields']:
+            field_name = field[0]
+            field_type = field[1] or ''
+            comment = field[2]
+            flag = field[3] if len(field) > 3 else ''
+
+            if field_type.__contains__('('):
+                field_type = field_type[0:field_type.index('(')]
+
+            fields.append({
+                'field_name': field_name,
+                'field_name_pascal': pascal_word(field_name),
+                'field_name_camel': camel_word(field_name),
+                'field_type': field_type,
+                'comment': comment,
+                'flag': flag
+            })
+
+        return fields
+
+
+def gen_code_by_var_list():
+    var_list = 'secretId,secretToken,orderNo,companyName,supplierName,currency,systemFile,supplierFile,memo'
+
+    for var in var_list.split(','):
+        # print(f'@RequestParam("{var}") String {var},')
+        print(f'{var}:{var}')
 
 
 if __name__ == '__main__':
@@ -100,6 +125,8 @@ if __name__ == '__main__':
     # rpa-platform 模板
     # src = r'D:\project\rpa\template_file'
 
+    codeGen = LocalCodeGen()
+
     # rpa-cloud 模板
     src = r'D:\project\rpa\source\rpa-cloud\template_file'
-    gen_code(src)
+    codeGen.gen_code(src)
