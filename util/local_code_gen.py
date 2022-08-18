@@ -3,18 +3,19 @@
 import os
 
 # 需要安装 pyyaml 模块
-import time
-
 import yaml
 from jinja2 import Environment, FileSystemLoader
 
 
 def camel_word(word=''):
-    words = word.lower().split('_')
-    for i in range(1, len(words)):
-        w = words[i]
-        words[i] = w[0].upper() + w[1:]
-    return ''.join(words)
+    if word.__contains__('_'):
+        words = word.lower().split('_')
+        for i in range(1, len(words)):
+            w = words[i]
+            words[i] = w[0].upper() + w[1:]
+        return ''.join(words)
+
+    return word[0].lower() + word[1:]
 
 
 def pascal_word(word=''):
@@ -23,12 +24,26 @@ def pascal_word(word=''):
     return word
 
 
+def hyphen_word(word=''):
+    return word.replace('_', '-').lower()
+
+
+def quote(str, q='\''):
+    return q + str + q
+
+
+def fmt(str, format='%s'):
+    return format % str
+
+
 class LocalCodeGen:
 
     def save_code(self, code, save_path, **kwargs):
 
-        save_path = save_path.replace('${table_name}', kwargs['table_name'])
-        save_path = save_path.replace('${table_name_pascal}', kwargs['table_name_pascal'])
+        save_path = save_path.replace('${table_name}', kwargs['table_name']) if kwargs.get('table_name') else save_path
+        save_path = save_path.replace('${table_name_pascal}', kwargs['table_name_pascal']) if kwargs.get('table_name_pascal') else save_path
+        save_path = save_path.replace('${component_dir}', kwargs['component_dir']) if kwargs.get('component_dir') else save_path
+        save_path = save_path.replace('${component_name_pascal}', kwargs['component_name_pascal']) if kwargs.get('component_name_pascal') else save_path
 
         if os.path.exists(save_path):
             f = open(save_path, 'r', encoding='utf-8')
@@ -54,7 +69,7 @@ class LocalCodeGen:
 
         table_names = []
         for item in setting['table_names']:
-            table_names.append((item[0], item[1]))
+            table_names.append(item)
 
         template_list = setting['template_list']
         source_root = setting['source_root']
@@ -72,19 +87,32 @@ class LocalCodeGen:
                 'menu_name': setting['menu_name'],
             }
 
-            fields = self.load_fields(template_root + rf'\model\{table_name}.yml')
+            table_setting_yml_path = template_root + rf'\model\{table_name}.yml'
+            with open(table_setting_yml_path, 'r', encoding='utf-8') as f:
+                table_setting = yaml.load(f, Loader=yaml.CLoader)
+
+            fields = self.load_fields(table_setting['fields'])
             args['fields'] = fields
+
+            table_args = self.load_args(table_setting.get('args'))
+            if table_args:
+                for key in table_args.keys():
+                    args[key] = table_args[key]
 
             for template in template_list:
                 template_name = template[0]
                 template_output = template[1]
-                template_flag = template[2] if len(template) > 2 else ''
                 result_file = source_root + '\\' + template_output
 
-                if template_flag.__contains__('table_name=') and not template_flag.__contains__(table_name):
-                    continue
+                template_flag = template[2] if len(template) > 2 else ''
+                template_flags = self.parse_flag(template_flag)
+                for key in template_flags.keys():
+                    args[key] = template_flags[key]
 
                 env = Environment(loader=FileSystemLoader(template_root))
+                env.filters["quote"] = quote
+                env.filters["fmt"] = fmt
+
                 jinja_template = env.get_template(template_name)
 
                 code = jinja_template.render(**args)
@@ -95,13 +123,43 @@ class LocalCodeGen:
 
                 print(f'-- {template_name} -- {table_name}  completed')
 
-    def load_fields(self, yml_path):
-        with open(yml_path, 'r', encoding='utf-8') as f:
-            fields_setting = yaml.load(f, Loader=yaml.CLoader)
+    def gen_component(self, template_root):
+        with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
+            setting = yaml.load(f, Loader=yaml.CLoader)
+
+        component_list = setting['component_list']
+        source_root = setting['source_root']
+        component_dir = setting['component_dir']
+        component_model = setting['component_model']
+        component_name = setting['component_name']
+
+        args = {
+            'component_dir': component_dir,
+            'component_model': component_model,
+            'component_name': component_name,
+            'component_name_camel': camel_word(component_name),
+            'component_name_pascal': pascal_word(component_name),
+            'component_name_hyphen': hyphen_word(component_name),
+        }
+
+        for template in component_list:
+            template_name = template[0]
+            template_output = template[1]
+
+            result_file = source_root + '\\' + template_output
+
+            env = Environment(loader=FileSystemLoader(template_root))
+            jinja_template = env.get_template(template_name)
+            code = jinja_template.render(**args)
+            self.save_code(code, result_file, **args)
+
+            print(f'-- {template_name} -- {component_name}  completed')
+
+    def load_fields(self, fields_setting):
 
         fields = []
         last_field_name = ''
-        for field in fields_setting['fields']:
+        for field in fields_setting:
             field_name = field[0]
             field_db_type = field[1] or ''
             comment = field[2]
@@ -111,7 +169,7 @@ class LocalCodeGen:
             field_length = ''
 
             if field_db_type.__contains__('('):
-                field_length = field_db_type[field_db_type.index('(')+1:field_db_type.index(')')]
+                field_length = field_db_type[field_db_type.index('(') + 1:field_db_type.index(')')]
                 field_type = field_db_type[0:field_db_type.index('(')].lower()
             else:
                 field_type = field_db_type
@@ -125,6 +183,8 @@ class LocalCodeGen:
                 java_type = 'Integer'
             elif field_type == 'bigint':
                 java_type = 'Long'
+            elif field_type == 'decimal':
+                java_type = 'double'
             elif field_type == 'datetime':
                 java_type = 'Date'
 
@@ -142,6 +202,7 @@ class LocalCodeGen:
 
             fields.append({
                 'field_name': field_name,
+                'field_name_with_prefix': 'prefix_' + field_name,
                 'field_name_pascal': pascal_word(field_name),
                 'field_name_camel': camel_word(field_name),
                 'field_db_type': field_db_type,
@@ -160,6 +221,26 @@ class LocalCodeGen:
         # print(fields)
         # exit()
         return fields
+
+    def load_args(self, args_setting):
+
+        args = {}
+        for arg in args_setting:
+            args[arg[0]] = arg[1]
+
+        return args
+
+    @staticmethod
+    def parse_flag(flag_string):
+        args = {}
+        if flag_string:
+            flags = flag_string.split(',')
+            if len(flags) > 0:
+                for flag in flags:
+                    kv = flag.split('=')
+                    args[kv[0]] = kv[1]
+
+        return args
 
 
 def gen_code_by_var_list():
@@ -184,8 +265,15 @@ if __name__ == '__main__':
     # src = r'D:\project\rpa\source\rpa-cloud-codegen\template_file'
 
     # 招商局融通模板
-    src = r'D:\project\zhuang\source\zsjrt-api-codegen\template_file'
-    codeGen.gen_code(src)
+    # src = r'D:\project\zhuang\source\zsjrt-api-codegen\template_file'
+    # codeGen.gen_code(src, False)  # for not console
+    # codeGen.gen_code(src, True)  # for console
+
+    # codeGen.gen_component(src)
+
+    # 明材模板
+    src = r'D:\project\mingcai\source\template_file'
+    codeGen.gen_code(src)  # for not console
 
     # while True:
     #     codeGen.gen_code(src)
