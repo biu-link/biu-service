@@ -273,7 +273,7 @@ if __name__ == '__main__':
 
     # 明材模板
     src = r'D:\project\mingcai\source\template_file'
-    codeGen.gen_code(src)  # for not console
+    codeGen.gen_code(src)
 
     # while True:
     #     codeGen.gen_code(src)
