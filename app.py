@@ -116,6 +116,7 @@ def get_template_list():
         result_list.append(template.serialize())
     return response(result_list)
 
+
 @app.route('/template')
 def get_template():
     check_token()
