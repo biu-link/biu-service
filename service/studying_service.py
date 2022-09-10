@@ -76,6 +76,8 @@ class StudyingService(metaclass=Singleton):
         lines = re.split('[\\r|\\n]', content)
         line_num = 100
         for line in lines:
+            if not line:
+                continue
             line_num += 1
             sentence = dict(
                 user_id=user_id,
