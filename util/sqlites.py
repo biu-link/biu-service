@@ -61,6 +61,11 @@ DB_SCRIPTS = [
      
     """],
 
+    [6,
+     """
+     alter table t_word_sentence add column article_id INTEGER;
+    """],
+
 ]
 
 

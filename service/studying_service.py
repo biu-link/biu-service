@@ -2,8 +2,10 @@
 from common.singleton import Singleton
 from model.article import Article
 from model.sentence import Sentence
+from model.word import Word
 from util.sqlites import SqlLites
 from util.times import Times
+from util.web_exception import WebException
 
 import json
 import re
@@ -18,7 +20,7 @@ class StudyingService(metaclass=Singleton):
     def get_article_list(self, user_id):
         article_list = []
 
-        rows = SqlLites().select_all("select * from t_article where user_id = ?", (user_id, ))
+        rows = SqlLites().select_all("select * from t_article where user_id = ?", (user_id,))
         for row in rows:
             article = Article()
             article.deserialize(row)
@@ -88,8 +90,55 @@ class StudyingService(metaclass=Singleton):
 
         return article_id
 
+    def insert_word(self, user_id, word, sentence_id, article_id):
+
+        rows = SqlLites().select_all(
+            "select t_word.* from t_word join t_word_sentence on t_word.id = t_word_sentence.word_id"
+            " where t_word.user_id = ?"
+            " and t_word.content = ? "
+            " and t_word_sentence.article_id = ? "
+            " order by id", (user_id, word, article_id))
+
+        if len(rows) > 0:
+            raise WebException(code=400, msg=f'{word} 已存在')
+
+        word = dict(
+            user_id=user_id,
+            content=word,
+            status='new'
+        )
+        word_id = SqlLites().insert('t_word', word)
+
+        word_sentence = dict(
+            user_id=user_id,
+            word_id=word_id,
+            sentence_id=sentence_id,
+            article_id=article_id
+        )
+        SqlLites().insert('t_word_sentence', word_sentence)
+        return word_id
+
+    def get_word_list(self, user_id, article_id, status):
+        word_list = []
+
+        rows = SqlLites().select_all(
+            "select t_word.* from t_word join t_word_sentence on t_word.id = t_word_sentence.word_id"
+            " where t_word.user_id = ?"
+            " and t_word_sentence.article_id = ? "
+            " and t_word.status = ?"
+            " order by id", (user_id, article_id, status))
+
+        for row in rows:
+            word = Word()
+            word.deserialize(row)
+            word_list.append(word)
+        return word_list
+
 
 if __name__ == '__main__':
     srv = StudyingService()
 
-    srv.get_article_list(1001)
+    # srv.insert_word(1001, 'word', 1, 1)
+
+    word_list = srv.get_word_list(1001, 1, 'new')
+    print(word_list)

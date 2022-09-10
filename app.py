@@ -201,5 +201,31 @@ def get_article(article_id):
     return response(dict(article=article.serialize(), sentence_list=result_list))
 
 
+@app.route('/word', methods=['POST'])
+def insert_word():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+
+    word = data['word']
+    sentence_id = data['sentence_id']
+    article_id = data['article_id']
+
+    word_id = StudyingService().insert_word(user_id, word, sentence_id, article_id)
+    return response(dict(word_id=word_id))
+
+
+@app.route('/word-list')
+def get_word_list():
+    user_id = 1001  # request.args.get('user_id')
+    article_id = request.args.get('article_id')
+    status = request.args.get('status')
+    word_list = StudyingService().get_word_list(user_id, article_id, status)
+
+    result_list = list(map(lambda x: x.serialize(), word_list))
+    return response(result_list)
+
+
 if __name__ == '__main__':
     app.run()
