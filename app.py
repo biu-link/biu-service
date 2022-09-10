@@ -191,6 +191,14 @@ def update_article():
     return response(dict(article_id=article_id))
 
 
+@app.route('/article/<article_id>', methods=['DELETE'])
+def delete_article(article_id):
+    user_id = 1001  # request.args.get('user_id')
+    StudyingService().delete_article(user_id, article_id)
+
+    return response()
+
+
 @app.route('/article/<article_id>')
 def get_article(article_id):
     user_id = 1001  # request.args.get('user_id')
@@ -225,6 +233,14 @@ def get_word_list():
 
     result_list = list(map(lambda x: x.serialize(), word_list))
     return response(result_list)
+
+
+@app.route('/word/<word_id>', methods=['DELETE'])
+def delete_word(word_id):
+    user_id = 1001  # request.args.get('user_id')
+    StudyingService().delete_word(user_id, word_id)
+
+    return response()
 
 
 if __name__ == '__main__':

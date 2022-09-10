@@ -40,6 +40,9 @@ class StudyingService(metaclass=Singleton):
     def update_article(self, article):
         SqlLites().update('t_article', article, 'id,user_id')
 
+    def delete_article(self, user_id, article_id):
+        SqlLites().execute(f"delete from t_article where user_id=? and id=?", (user_id, article_id))
+
     def get_sentence_list(self, user_id, article_id):
         sentence_list = []
 
@@ -133,6 +136,10 @@ class StudyingService(metaclass=Singleton):
             word.deserialize(row)
             word_list.append(word)
         return word_list
+
+    def delete_word(self, user_id, word_id):
+        SqlLites().execute(f"delete from t_word where user_id=? and id=?", (user_id, word_id))
+        SqlLites().execute(f"delete from t_word_sentence where user_id=? and word_id=?", (user_id, word_id))
 
 
 if __name__ == '__main__':
