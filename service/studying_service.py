@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from common.singleton import Singleton
 from model.article import Article
+from model.sentence import Sentence
 from util.sqlites import SqlLites
+from util.times import Times
 
 import json
+import re
 
 
 class StudyingService(metaclass=Singleton):
@@ -15,7 +18,7 @@ class StudyingService(metaclass=Singleton):
     def get_article_list(self, user_id):
         article_list = []
 
-        rows = SqlLites().select_all("select * from t_article where user_id = ?", (user_id))
+        rows = SqlLites().select_all("select * from t_article where user_id = ?", (user_id, ))
         for row in rows:
             article = Article()
             article.deserialize(row)
@@ -28,26 +31,64 @@ class StudyingService(metaclass=Singleton):
         article.deserialize(row)
         return article
 
-    def save_article(self, json_string):
-        article = json.loads(json_string)
+    def insert_article(self, article):
+        article['create_time'] = Times.current_datetime()
         return SqlLites().insert('t_article', article)
 
     def update_article(self, json_string):
         article = json.loads(json_string)
-        SqlLites().update('t_article', article, 'id')
+        SqlLites().update('t_article', article, 'id,user_id')
+
+    def get_sentence_list(self, user_id, article_id):
+        sentence_list = []
+
+        rows = SqlLites().select_all("select * from t_sentence where user_id = ? and article_id = ? order by line_num", (user_id, article_id))
+        for row in rows:
+            sentence = Sentence()
+            sentence.deserialize(row)
+            sentence_list.append(sentence)
+        return sentence_list
+
+    def get_sentence(self, user_id, sentence_id):
+        sentence = Sentence()
+        row = SqlLites().select_one("select * from t_sentence where user_id = ? and id = ?", (user_id, sentence_id))
+        sentence.deserialize(row)
+        return sentence
+
+    def insert_sentence(self, json_string):
+        sentence = json.loads(json_string)
+        return SqlLites().insert('t_sentence', sentence)
+
+    def update_sentence(self, json_string):
+        sentence = json.loads(json_string)
+        SqlLites().update('t_sentence', sentence, 'id,user_id')
+
+    def insert_article_and_sentence(self, user_id, article_name, content):
+        article = dict(
+            user_id=user_id,
+            name=article_name,
+            status='new',
+            last_sentence_id=-1,
+            create_time=Times.current_datetime()
+        )
+        article_id = SqlLites().insert('t_article', article)
+
+        lines = re.split('[\\r|\\n]', content)
+        line_num = 100
+        for line in lines:
+            line_num += 1
+            sentence = dict(
+                user_id=user_id,
+                article_id=article_id,
+                content=line,
+                line_num=str(line_num)
+            )
+            SqlLites().insert('t_sentence', sentence)
+
+        return article_id
 
 
 if __name__ == '__main__':
     srv = StudyingService()
 
-    data = {
-        'id': 1,
-        'user_id': 1001,
-        'name': 'name_003',
-        'status': 'status_3'
-    }
-
-    row_id = srv.save_article(json.dumps(data))
-
-    art = srv.get_article(1001, row_id)
-    print(art)
+    srv.insert_article_and_sentence(1001, 'test', 'abc\n123\ndef\n789\nxyz')

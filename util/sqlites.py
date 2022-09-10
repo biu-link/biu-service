@@ -27,6 +27,40 @@ DB_SCRIPTS = [
      alter table t_article add column user_id INTEGER;
     """],
 
+    [5,
+     """
+     alter table t_article add column category TEXT;
+     alter table t_article add column last_sentence_id INTEGER;
+     alter table t_article add column media_path INTEGER;
+     alter table t_article add column create_time TEXT;
+     
+     create table t_sentence(
+     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     user_id INTEGER,
+     article_id INTEGER,
+     line_num TEXT, 
+     content TEXT,
+     note TEXT
+     );
+     
+     create table t_word(
+     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     user_id INTEGER,
+     content TEXT,
+     note TEXT,
+     status TEXT,
+     category TEXT     
+     );
+     
+     create table t_word_sentence(
+     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     user_id INTEGER,
+     word_id INTEGER,
+     sentence_id INTEGER
+     );     
+     
+    """],
+
 ]
 
 
@@ -121,12 +155,26 @@ class SqlLites:
     @staticmethod
     def update_db(current_version):
 
+        has_error = False
+        version = None
+
         for script in DB_SCRIPTS:
             version = script[0]
-            sql = script[1]
             if current_version < version:
-                SqlLites.executescript(sql)
-                SqlLites.update_version(version)
+                content = script[1]
+                sqls = content.split(';')
+                for sql in sqls:
+                    try:
+                        SqlLites.executescript(sql)
+                    except Exception as e:
+                        print(e)
+                        error = str(e)
+                        if not error.__contains__('already exists') \
+                                and not error.__contains__('duplicate column name'):
+                            has_error = True
+
+        if not has_error:
+            SqlLites.update_version(version)
 
     @staticmethod
     def update_version(version):

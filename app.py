@@ -16,6 +16,7 @@ from util.json_encoder import JsonEncoder
 from util.web_exception import WebException
 
 from service.template_service import TemplateService
+from service.studying_service import StudyingService
 
 app = Flask(__name__)
 
@@ -153,6 +154,39 @@ def logout():
     authorization = request.headers.get('Authorization')
     UserService().logout(urllib.parse.unquote(authorization))
     return response()
+
+
+@app.route('/article-list')
+def get_article_list():
+    user_id = 1001  # request.args.get('user_id')
+    article_list = StudyingService().get_article_list(user_id)
+
+    result_list = list(map(lambda x: x.serialize(), article_list))
+    return response(result_list)
+
+
+@app.route('/article', methods=['POST'])
+def insert_article():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+
+    article_name = data['name']
+    content = data['content']
+
+    article_id = StudyingService().insert_article_and_sentence(user_id, article_name, content)
+    return response(dict(article_id=article_id))
+
+
+@app.route('/article/<article_id>')
+def get_article(article_id):
+    user_id = 1001  # request.args.get('user_id')
+    article = StudyingService().get_article(user_id, article_id)
+    sentence_list = StudyingService().get_sentence_list(user_id, article_id)
+    result_list = list(map(lambda x: x.serialize(), sentence_list))
+
+    return response(dict(article=article.serialize(), sentence_list=result_list))
 
 
 if __name__ == '__main__':
