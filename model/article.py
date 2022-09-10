@@ -14,7 +14,7 @@ class Article(AbstractModel):
         self.name = None
         self.status = None
         self.category = None
-        self.last_sentence_id = None
+        self.last_sentence_line_num = None
         self.media_path = None
         self.create_time = None
 
@@ -24,6 +24,6 @@ class Article(AbstractModel):
         self.name = params.get('name')
         self.status = params.get('status')
         self.category = params.get('category')
-        self.last_sentence_id = params.get('last_sentence_id')
+        self.last_sentence_line_num = params.get('last_sentence_line_num')
         self.media_path = params.get('media_path')
         self.create_time = params.get('create_time')

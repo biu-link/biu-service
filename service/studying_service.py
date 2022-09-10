@@ -35,8 +35,7 @@ class StudyingService(metaclass=Singleton):
         article['create_time'] = Times.current_datetime()
         return SqlLites().insert('t_article', article)
 
-    def update_article(self, json_string):
-        article = json.loads(json_string)
+    def update_article(self, article):
         SqlLites().update('t_article', article, 'id,user_id')
 
     def get_sentence_list(self, user_id, article_id):
@@ -68,7 +67,7 @@ class StudyingService(metaclass=Singleton):
             user_id=user_id,
             name=article_name,
             status='new',
-            last_sentence_id=-1,
+            last_sentence_line_num='',
             create_time=Times.current_datetime()
         )
         article_id = SqlLites().insert('t_article', article)
@@ -93,4 +92,4 @@ class StudyingService(metaclass=Singleton):
 if __name__ == '__main__':
     srv = StudyingService()
 
-    srv.insert_article_and_sentence(1001, 'test', 'abc\n123\ndef\n789\nxyz')
+    srv.get_article_list(1001)

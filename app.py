@@ -179,6 +179,18 @@ def insert_article():
     return response(dict(article_id=article_id))
 
 
+@app.route('/article', methods=['PUT'])
+def update_article():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+    data['user_id'] = user_id
+
+    article_id = StudyingService().update_article(data)
+    return response(dict(article_id=article_id))
+
+
 @app.route('/article/<article_id>')
 def get_article(article_id):
     user_id = 1001  # request.args.get('user_id')

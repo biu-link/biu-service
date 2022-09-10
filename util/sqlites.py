@@ -30,7 +30,7 @@ DB_SCRIPTS = [
     [5,
      """
      alter table t_article add column category TEXT;
-     alter table t_article add column last_sentence_id INTEGER;
+     alter table t_article add column last_sentence_line_num TEXT;
      alter table t_article add column media_path INTEGER;
      alter table t_article add column create_time TEXT;
      
