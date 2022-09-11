@@ -121,6 +121,22 @@ class StudyingService(metaclass=Singleton):
         SqlLites().insert('t_word_sentence', word_sentence)
         return word_id
 
+    def update_word(self, word):
+
+        rows = SqlLites().select_all(
+            "select t_word.* from t_word join t_word_sentence on t_word.id = t_word_sentence.word_id"
+            " where t_word.user_id = ?"
+            " and t_word.content = ? "
+            " and t_word_sentence.article_id = ? "
+            " and t_word.id != ? ", (word['user_id'], word['content'], word['article_id'], word['id']))
+
+        if len(rows) > 0:
+            raise WebException(code=400, msg=f"{word['content']} 已存在")
+
+        del word['article_id']
+
+        SqlLites().update('t_word', word, 'id,user_id')
+
     def get_word_list(self, user_id, article_id, status):
         word_list = []
 

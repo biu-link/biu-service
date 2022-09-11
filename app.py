@@ -187,8 +187,8 @@ def update_article():
     data = json.loads(body)
     data['user_id'] = user_id
 
-    article_id = StudyingService().update_article(data)
-    return response(dict(article_id=article_id))
+    StudyingService().update_article(data)
+    return response()
 
 
 @app.route('/article/<article_id>', methods=['DELETE'])
@@ -222,6 +222,18 @@ def insert_word():
 
     word_id = StudyingService().insert_word(user_id, word, sentence_id, article_id)
     return response(dict(word_id=word_id))
+
+
+@app.route('/word', methods=['PUT'])
+def update_word():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+    data['user_id'] = user_id
+
+    StudyingService().update_word(data)
+    return response()
 
 
 @app.route('/word-list')
