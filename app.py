@@ -199,6 +199,19 @@ def delete_article(article_id):
     return response()
 
 
+@app.route('/sentence/split', methods=['PUT'])
+def split_sentence():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+    sentence_id = data['sentence_id']
+    lines = data['lines']
+
+    StudyingService().split_sentence(user_id, sentence_id, lines)
+    return response()
+
+
 @app.route('/article/<article_id>')
 def get_article(article_id):
     user_id = 1001  # request.args.get('user_id')

@@ -67,6 +67,24 @@ class StudyingService(metaclass=Singleton):
         sentence = json.loads(json_string)
         SqlLites().update('t_sentence', sentence, 'id,user_id')
 
+    def split_sentence(self, user_id, sentence_id, lines):
+
+        sentence = SqlLites().select_one("select * from t_sentence where user_id = ? and id = ?", (user_id, sentence_id))
+        line_num = sentence['line_num']
+
+        lines = lines.split('\n')
+        for i in range(len(lines)):
+            if i == 0:
+                sentence['content'] = lines[i].strip()
+                SqlLites().update('t_sentence', sentence, 'id, user_id')
+            else:
+                line = lines[i].strip()
+                if not line:
+                    continue
+                sentence['content'] = line
+                sentence['line_num'] = f"{line_num}_{str(i).rjust(3, '0')}"
+                SqlLites().insert('t_sentence', sentence)
+
     def insert_article_and_sentence(self, user_id, article_name, content):
         article = dict(
             user_id=user_id,
@@ -78,7 +96,7 @@ class StudyingService(metaclass=Singleton):
         article_id = SqlLites().insert('t_article', article)
 
         lines = re.split('[\\r|\\n]', content)
-        line_num = 100
+        line_num = 10000
         for line in lines:
             if not line:
                 continue
