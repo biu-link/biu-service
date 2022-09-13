@@ -170,12 +170,13 @@ def insert_article():
     user_id = 1001
 
     body = request.data.decode()
-    data = json.loads(body)
+    article = json.loads(body)
+    article['user_id'] = user_id
 
-    article_name = data['name']
-    content = data['content']
+    content = article['content']
+    del article['content']
 
-    article_id = StudyingService().insert_article_and_sentence(user_id, article_name, content)
+    article_id = StudyingService().insert_article_and_sentence(article, content)
     return response(dict(article_id=article_id))
 
 

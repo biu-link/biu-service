@@ -85,15 +85,13 @@ class StudyingService(metaclass=Singleton):
                 sentence['line_num'] = f"{line_num}_{str(i).rjust(3, '0')}"
                 SqlLites().insert('t_sentence', sentence)
 
-    def insert_article_and_sentence(self, user_id, article_name, content):
-        article = dict(
-            user_id=user_id,
-            name=article_name,
-            status='new',
-            last_sentence_line_num='',
-            create_time=Times.current_datetime()
-        )
+    def insert_article_and_sentence(self, article, content):
+        article['status'] = 'new'
+        article['last_sentence_line_num'] = ''
+        article['create_time'] = Times.current_datetime()
+
         article_id = SqlLites().insert('t_article', article)
+        user_id = article['user_id']
 
         lines = re.split('[\\r|\\n]', content)
         line_num = 10000
