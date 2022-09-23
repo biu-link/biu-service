@@ -15,6 +15,7 @@ class Sentence(AbstractModel):
         self.content = None
         self.line_num = None
         self.note = None
+        self.translation = None
 
     def deserialize(self, params):
         self.id = params.get('id')
@@ -23,3 +24,4 @@ class Sentence(AbstractModel):
         self.content = params.get('content')
         self.line_num = params.get('line_num')
         self.note = params.get('note')
+        self.translation = params.get('translation')

@@ -63,8 +63,7 @@ class StudyingService(metaclass=Singleton):
         sentence = json.loads(json_string)
         return SqlLites().insert('t_sentence', sentence)
 
-    def update_sentence(self, json_string):
-        sentence = json.loads(json_string)
+    def update_sentence(self, sentence):
         SqlLites().update('t_sentence', sentence, 'id,user_id')
 
     def split_sentence(self, user_id, sentence_id, lines):

@@ -66,6 +66,11 @@ DB_SCRIPTS = [
      alter table t_word_sentence add column article_id INTEGER;
     """],
 
+    [7,
+     """
+     alter table t_sentence add column translation TEXT;
+    """],
+
 ]
 
 

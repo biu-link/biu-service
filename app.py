@@ -213,6 +213,18 @@ def split_sentence():
     return response()
 
 
+@app.route('/sentence', methods=['PUT'])
+def update_sentence():
+    user_id = 1001
+
+    body = request.data.decode()
+    data = json.loads(body)
+    data['user_id'] = user_id
+
+    StudyingService().update_sentence(data)
+    return response()
+
+
 @app.route('/article/<article_id>')
 def get_article(article_id):
     user_id = 1001  # request.args.get('user_id')
