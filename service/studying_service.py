@@ -82,6 +82,8 @@ class StudyingService(metaclass=Singleton):
                     continue
                 sentence['content'] = line
                 sentence['line_num'] = f"{line_num}_{str(i).rjust(3, '0')}"
+                sentence['translation'] = ''
+                sentence['note'] = ''
                 SqlLites().insert('t_sentence', sentence)
 
     def insert_article_and_sentence(self, article, content):
