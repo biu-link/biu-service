@@ -281,5 +281,13 @@ def delete_word(word_id):
     return response()
 
 
+@app.route('/study-stat', methods=['GET'])
+def get_stat_info():
+    user_id = 1001
+    article_id = request.args.get('article_id')
+    data = StudyingService().get_stat_info(user_id, article_id)
+    return response(data)
+
+
 if __name__ == '__main__':
     app.run()

@@ -174,6 +174,23 @@ class StudyingService(metaclass=Singleton):
         SqlLites().execute(f"delete from t_word where user_id=? and id=?", (user_id, word_id))
         SqlLites().execute(f"delete from t_word_sentence where user_id=? and word_id=?", (user_id, word_id))
 
+    def get_stat_info(self, user_id, article_id):
+        row = SqlLites().select_one('select count(1) as cnt from t_sentence where length(content) > 10 and user_id = ?', (user_id,))
+        cnt = row['cnt']
+
+        row = SqlLites().select_one('select count(1) as cnt from t_sentence where length(content) > 10 and got_it = 1 and user_id = ?', (user_id,))
+        got_it = row['cnt']
+
+        row = SqlLites().select_one('select count(1) as cnt from t_sentence where length(content) > 10 and user_id = ? and article_id = ?',
+                                    (user_id, article_id))
+        article_cnt = row['cnt']
+
+        row = SqlLites().select_one('select count(1) as cnt from t_sentence where length(content) > 10 and got_it = 1 and user_id = ? and article_id = ?',
+                                    (user_id, article_id))
+        article_got_it = row['cnt']
+
+        return dict(cnt=cnt, got_it=got_it, article_cnt=article_cnt, article_got_it=article_got_it)
+
 
 if __name__ == '__main__':
     srv = StudyingService()
