@@ -3,17 +3,15 @@
 import util.tools as tools
 import pymysql
 
-from common.singleton import Singleton
 from dbutils.pooled_db import PooledDB
 
 
-class MysqlDB(metaclass=Singleton):
+class MysqlDB:
     __pool = None
     __conn = None
     __cursor = None
 
     def __init__(self):
-        super(MysqlDB, self).__init__()
         self.__conn = MysqlDB.__get_conn()
         self.__cursor = self.__conn.cursor()
 

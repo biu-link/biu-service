@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from common.singleton import Singleton
 from model.template import Template
-from util.mysql_db import MysqlDB
 from util.mongo_db import MongoDB
 
 

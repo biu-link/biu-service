@@ -1,14 +1,20 @@
 # -*- coding: utf-8 -*-
 
 import os
+import time
 
 # 需要安装 pyyaml 模块
 import yaml
 from jinja2 import Environment, FileSystemLoader
+from util.mysql_db import MysqlDB
+
+
+def is_all_upper(word):
+    return word.upper() == word
 
 
 def camel_word(word=''):
-    if word.__contains__('_'):
+    if word.__contains__('_') or is_all_upper(word):
         words = word.lower().split('_')
         for i in range(1, len(words)):
             w = words[i]
@@ -40,12 +46,14 @@ class LocalCodeGen:
 
     def save_code(self, code, save_path, **kwargs):
 
-        save_path = save_path.replace('${table_name}', kwargs['table_name']) if kwargs.get('table_name') else save_path
-        save_path = save_path.replace('${table_name_pascal}', kwargs['table_name_pascal']) if kwargs.get('table_name_pascal') else save_path
-        save_path = save_path.replace('${component_dir}', kwargs['component_dir']) if kwargs.get('component_dir') else save_path
-        save_path = save_path.replace('${component_name_pascal}', kwargs['component_name_pascal']) if kwargs.get('component_name_pascal') else save_path
+        for var in kwargs:
+            if kwargs[var] is not None and isinstance(kwargs[var], str):
+                save_path = save_path.replace('${' + var + '}', kwargs[var])
 
         if os.path.exists(save_path):
+            if kwargs.get('flag_once') == '1':
+                return
+
             f = open(save_path, 'r', encoding='utf-8')
             old_content = f.read()
             f.close()
@@ -63,16 +71,23 @@ class LocalCodeGen:
         f.write(code)
         f.close()
 
-    def gen_code(self, template_root):
+    def gen_code(self, template_root, source_root=None, table_names=None, db_schema=None):
         with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
             setting = yaml.load(f, Loader=yaml.CLoader)
 
-        table_names = []
-        for item in setting['table_names']:
-            table_names.append(item)
+        if table_names is None:
+            table_names = []
+            for item in setting['table_names']:
+                table_names.append(item)
 
         template_list = setting['template_list']
-        source_root = setting['source_root']
+
+        if source_root is None:
+            source_root = setting['source_root']
+
+        ignore_fields_name = setting.get('ignore_fields_name')
+
+        env_vars = setting.get('env_vars')
 
         for table in table_names:
             table_name = table[0]
@@ -80,34 +95,44 @@ class LocalCodeGen:
 
             args = {
                 'table_name': table_name,
+                'table_name_minus': table_name.replace('_', '-'),
+                'table_name_path': table_name.replace('_', '/'),
                 'table_name_chinese': table_name_chinese,
                 'table_name_pascal': pascal_word(table_name),
                 'table_name_camel': camel_word(table_name),
-                'parent_menu_name': setting['parent_menu_name'],
-                'menu_name': setting['menu_name'],
+                'parent_menu_name': setting.get('parent_menu_name'),
+                'menu_name': setting.get('menu_name'),
             }
 
-            table_setting_yml_path = template_root + rf'\model\{table_name}.yml'
-            with open(table_setting_yml_path, 'r', encoding='utf-8') as f:
-                table_setting = yaml.load(f, Loader=yaml.CLoader)
+            if env_vars:
+                print(env_vars)
+                args = dict(args, **env_vars)
+                print(args)
 
-            fields = self.load_fields(table_setting['fields'])
+            table_setting_yml_path = template_root + rf'\model\{table_name}.yml'
+            if os.path.exists(table_setting_yml_path):
+                with open(table_setting_yml_path, 'r', encoding='utf-8') as f:
+                    table_setting = yaml.load(f, Loader=yaml.CLoader)
+            else:
+                table_setting = get_db_fields(db_schema, table_name)
+
+            fields = self.load_fields(table_setting['fields'], ignore_fields_name)
             args['fields'] = fields
 
             table_args = self.load_args(table_setting.get('args'))
-            if table_args:
-                for key in table_args.keys():
-                    args[key] = table_args[key]
+            if table_args is None:
+                table_args = {}
 
             for template in template_list:
                 template_name = template[0]
                 template_output = template[1]
-                result_file = source_root + '\\' + template_output
 
                 template_flag = template[2] if len(template) > 2 else ''
                 template_flags = self.parse_flag(template_flag)
-                for key in template_flags.keys():
-                    args[key] = template_flags[key]
+                if template_flags is None:
+                    template_flags = {}
+
+                result_file = source_root + '\\' + template_output
 
                 env = Environment(loader=FileSystemLoader(template_root))
                 env.filters["quote"] = quote
@@ -115,11 +140,20 @@ class LocalCodeGen:
 
                 jinja_template = env.get_template(template_name)
 
-                code = jinja_template.render(**args)
+                final_args = {
+                    **args,
+                    **table_args,
+                    **template_flags,
+                }
+
+                if final_args.get('pk_id') is None:
+                    final_args['pk_id'] = 'id'
+
+                code = jinja_template.render(**final_args)
                 if template_output == 'console':
                     print(code)
                 else:
-                    self.save_code(code, result_file, **args)
+                    self.save_code(code, result_file, **final_args)
 
                 print(f'-- {template_name} -- {table_name}  completed')
 
@@ -155,12 +189,19 @@ class LocalCodeGen:
 
             print(f'-- {template_name} -- {component_name}  completed')
 
-    def load_fields(self, fields_setting):
+    def load_fields(self, fields_setting, ignore_fields_name):
+
+        if ignore_fields_name is None:
+            ignore_fields_name = []
 
         fields = []
         last_field_name = ''
         for field in fields_setting:
             field_name = field[0]
+
+            if ignore_fields_name.__contains__(field_name):
+                continue
+
             field_db_type = field[1] or ''
             comment = field[2]
             flag = field[3] if len(field) > 3 else ''
@@ -175,18 +216,35 @@ class LocalCodeGen:
                 field_type = field_db_type
 
             java_type = ''
-            if field_type == 'varchar':
+            jdbc_type = ''
+            ts_type = ''
+            if field_type in ['varchar', 'text', 'mediumtext']:
                 java_type = 'String'
-            elif field_type == 'text':
-                java_type = 'String'
+                jdbc_type = 'VARCHAR'
+                ts_type = 'string'
             elif field_type == 'int':
                 java_type = 'Integer'
+                jdbc_type = 'INTEGER'
+                ts_type = 'number'
             elif field_type == 'bigint':
                 java_type = 'Long'
+                jdbc_type = 'BIGINT'
+                ts_type = 'string'
             elif field_type == 'decimal':
                 java_type = 'double'
+                jdbc_type = 'DECIMAL'
+                ts_type = 'number'
+            elif field_type == 'date':
+                java_type = 'Date'
+                jdbc_type = 'DATE'
+                ts_type = 'string'
             elif field_type == 'datetime':
                 java_type = 'Date'
+                jdbc_type = 'TIMESTAMP'
+                ts_type = 'string'
+
+            if field_type in ['text', 'mediumtext']:
+                jdbc_type = 'LONGVARCHAR'
 
             if flag.__contains__('NOT_NULL'):
                 null_default = f"NOT NULL"
@@ -205,10 +263,13 @@ class LocalCodeGen:
                 'field_name_with_prefix': 'prefix_' + field_name,
                 'field_name_pascal': pascal_word(field_name),
                 'field_name_camel': camel_word(field_name),
+                'field_name_lower': field_name.lower(),
                 'field_db_type': field_db_type,
                 'field_type': field_type,
                 'field_length': field_length,
                 'java_type': java_type,
+                'jdbc_type': jdbc_type,
+                'ts_type': ts_type,
                 'comment': comment,
                 'flag': flag,
                 'null_default': null_default,
@@ -223,6 +284,9 @@ class LocalCodeGen:
         return fields
 
     def load_args(self, args_setting):
+
+        if args_setting is None:
+            return None
 
         args = {}
         for arg in args_setting:
@@ -251,6 +315,44 @@ def gen_code_by_var_list():
         print(f'{var}:{var}')
 
 
+def get_db_table_names(db_name, table_names=None):
+    mysql = MysqlDB()
+    sql = f"""SELECT TABLE_NAME, TABLE_COMMENT
+FROM information_schema.`TABLES`
+WHERE TABLE_SCHEMA = '{db_name}'
+and TABLE_NAME not like 'xxx%'
+and TABLE_NAME not like '\\_%'"""
+
+    if table_names:
+        arr = table_names.split(',')
+        if len(arr) > 0:
+            tables = ','.join(f"'{table}'" for table in arr)
+            sql = sql + f" and TABLE_NAME in ({tables})"
+
+    print(sql)
+    rows = mysql.select(sql)
+
+    return list(map(lambda x: [x['TABLE_NAME'], x['TABLE_COMMENT']], rows))
+
+
+def get_db_fields(db_schema, table_name):
+    mysql = MysqlDB()
+    sql = f"""SELECT COLUMN_NAME, COLUMN_TYPE, COLUMN_COMMENT
+FROM information_schema.COLUMNS
+WHERE TABLE_NAME = '{table_name}' and TABLE_SCHEMA = '{db_schema}'
+order by ordinal_position"""
+
+    rows = mysql.select(sql)
+
+    fields = []
+    for row in rows:
+        fields.append([row['COLUMN_NAME'], row['COLUMN_TYPE'], row['COLUMN_COMMENT']])
+
+    return {
+        "fields": fields
+    }
+
+
 if __name__ == '__main__':
     # gen_code_by_table()
 
@@ -272,9 +374,61 @@ if __name__ == '__main__':
     # codeGen.gen_component(src)
 
     # 明材模板
-    src = r'D:\project\mingcai\source\template_file'
-    codeGen.gen_code(src)
+    # src = r'D:\project\mingcai\source\template_file'
+    # codeGen.gen_code(src)
+
+    # 天文底片模板
+    # src = r'D:\project\wang\legacyplate\legacyplate-sanic-server\template_file'
+    # codeGen.gen_code(src)
+
+    # 掩星模板
+    # src = r'D:\project\wang\gnss\gnss-sanic-server\template_file'
+    # codeGen.gen_code(src)
+
+    # 碎片模板
+    # src = r'D:\project\wang\satod-neas\satod-sanic-server\template_file'
+    # codeGen.gen_code(src)
+
+    # table_names = get_db_table_names('satod')
+    # src = r'D:\project\mingcai\source\mint-admin-vue3\template_file'
+    # source_root = r'D:\project\mingcai\source\mint-admin-vue3-gen-code'
+    # codeGen.gen_code(src, source_root, table_names, 'satod')
+
+    # 明材模板 前端
+    # include_table_names = 'lesson'
+    # table_names = get_db_table_names('mint', include_table_names)
+    # src = r'D:\source\mint-admin\template_file'
+    # source_root = r'D:\source\mint-admin-vue3-gen-code'
+    # # source_root = r'D:\source\mint-admin'
+    # codeGen.gen_code(src, source_root, table_names, 'mint')
+    #
+    # # 明材模板 后端
+    # table_names = get_db_table_names('mint', include_table_names)
+    # src = r'D:\source\template_file'
+    # source_root = r'D:\source\mint-server\server'
+    # codeGen.gen_code(src, source_root, table_names, 'mint')
+
+
+    # 数字化教材 前端
+    include_table_names = 'course_user'
+    table_names = get_db_table_names('digital-books', include_table_names)
+    src = r'D:\source\digital-books-template\web'
+    source_root = r'D:\source\digital-books-portal'
+    # source_root = r'D:\source\mint-admin'
+    codeGen.gen_code(src, source_root, table_names, 'digital-books')
+
+    # 数字化教材 后端
+    table_names = get_db_table_names('digital-books', include_table_names)
+    src = r'D:\source\digital-books-template\java'
+    source_root = r'D:\source\digital-books-api\digital-books-service'
+    codeGen.gen_code(src, source_root, table_names, 'digital-books')
+    
+    # d:
+    # cd D:\source\biu-service
+    # set PYTHONPATH=%PYTHONPATH%;D:\source\biu-service
+    # python util\local_code_gen.py
+    
 
     # while True:
-    #     codeGen.gen_code(src)
-    #     time.sleep(5)
+    #     codeGen.gen_code(src, source_root, table_names, 'mint')
+    #     time.sleep(2)
