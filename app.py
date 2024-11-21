@@ -18,6 +18,8 @@ from util.web_exception import WebException
 from service.template_service import TemplateService
 from service.studying_service import StudyingService
 
+from api import api
+
 app = Flask(__name__)
 
 env = tools.get_config_value('common', 'env')
@@ -25,6 +27,8 @@ if not env.__contains__('prod'):
     from flask_cors import CORS
 
     CORS(app, supports_credentials=True)
+
+app.register_blueprint(api)
 
 
 def response(data=None, error_code=0, http_code=500, message=''):
@@ -53,11 +57,6 @@ def error_response(http_code, message, error_code=-1):
 def check_token():
     authorization = request.headers.get('Authorization')
     return UserService().check_token(urllib.parse.unquote(authorization))
-
-
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
 
 
 # ------------ project 相关接口
