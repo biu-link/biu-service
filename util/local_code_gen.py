@@ -410,7 +410,7 @@ if __name__ == '__main__':
 
 
     # 数字化教材 前端
-    include_table_names = 'course_user'
+    include_table_names = 'user_lesson_note'
     table_names = get_db_table_names('digital-books', include_table_names)
     src = r'D:\source\digital-books-template\web'
     source_root = r'D:\source\digital-books-portal'

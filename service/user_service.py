@@ -8,7 +8,7 @@ import json
 import util.tools as tools
 
 from common.singleton import Singleton
-from authing.v2.authentication import AuthenticationClient, AuthenticationClientOptions
+# from authing.v2.authentication import AuthenticationClient, AuthenticationClientOptions
 
 from model.user import User
 from util.web_exception import WebException
