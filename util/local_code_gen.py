@@ -455,7 +455,7 @@ if __name__ == '__main__':
             'vars': {
                 'module_name': 'aiqgb'
             },
-            'include_table_names': 'aq_order,aq_group_buy_order,aq_message_template,aq_message_task,aq_message_history'
+            'include_table_names': 'aq_product,aq_order,aq_group_buy_order,aq_message_template,aq_message_task,aq_message_history'
         },
     ]
 
