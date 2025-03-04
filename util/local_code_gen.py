@@ -71,7 +71,7 @@ class LocalCodeGen:
         f.write(code)
         f.close()
 
-    def gen_code(self, template_root, source_root=None, table_names=None, db_schema=None):
+    def gen_code(self, template_root, source_root=None, table_names=None, db_schema=None, remove_table_prefix=None, vars=None):
         with open(template_root + r'\setting.yml', 'r', encoding='utf-8') as f:
             setting = yaml.load(f, Loader=yaml.CLoader)
 
@@ -86,14 +86,23 @@ class LocalCodeGen:
             source_root = setting['source_root']
 
         ignore_fields_name = setting.get('ignore_fields_name')
+        insert_ignore_fields_name = setting.get('insert_ignore_fields_name')
+        update_ignore_fields_name = setting.get('update_ignore_fields_name')
+        where_ignore_fields_name = setting.get('where_ignore_fields_name')
+        where_must_fields_name = setting.get('where_must_fields_name')
 
         env_vars = setting.get('env_vars')
 
         for table in table_names:
-            table_name = table[0]
+            origin_table_name = table[0]
             table_name_chinese = table[1]
 
+            table_name = origin_table_name
+            if remove_table_prefix and table_name.startswith(remove_table_prefix):
+                table_name = table_name[len(remove_table_prefix):]
+
             args = {
+                'origin_table_name': origin_table_name,
                 'table_name': table_name,
                 'table_name_minus': table_name.replace('_', '-'),
                 'table_name_path': table_name.replace('_', '/'),
@@ -105,20 +114,27 @@ class LocalCodeGen:
             }
 
             if env_vars:
-                print(env_vars)
                 args = dict(args, **env_vars)
-                print(args)
+
+            if vars:
+                args = dict(args, **vars)
+
+            print(args)
 
             table_setting_yml_path = template_root + rf'\model\{table_name}.yml'
             if os.path.exists(table_setting_yml_path):
                 with open(table_setting_yml_path, 'r', encoding='utf-8') as f:
                     table_setting = yaml.load(f, Loader=yaml.CLoader)
             else:
-                table_setting = get_db_fields(db_schema, table_name)
+                table_setting = get_db_fields(db_schema, origin_table_name)
 
-            fields = self.load_fields(table_setting['fields'], ignore_fields_name)
-            args['fields'] = fields
+            args['fields'] = self.load_fields(table_setting['fields'], ignore_fields_name)
+            args['insert_fields'] = self.load_fields(table_setting['fields'], insert_ignore_fields_name)
+            args['update_fields'] = self.load_fields(table_setting['fields'], update_ignore_fields_name)
+            args['where_fields'] = self.load_fields(table_setting['fields'], where_ignore_fields_name)
+            args['where_must_fields'] = self.load_fields(table_setting['fields'], None, where_must_fields_name)
 
+            # 获取 tabel_name.yml 文件中设置的 table 级别的参数
             table_args = self.load_args(table_setting.get('args'))
             if table_args is None:
                 table_args = {}
@@ -189,7 +205,7 @@ class LocalCodeGen:
 
             print(f'-- {template_name} -- {component_name}  completed')
 
-    def load_fields(self, fields_setting, ignore_fields_name):
+    def load_fields(self, fields_setting, ignore_fields_name, just_fields_name=None):
 
         if ignore_fields_name is None:
             ignore_fields_name = []
@@ -200,6 +216,9 @@ class LocalCodeGen:
             field_name = field[0]
 
             if ignore_fields_name.__contains__(field_name):
+                continue
+
+            if just_fields_name is not None and just_fields_name.__contains__(field_name) is False:
                 continue
 
             field_db_type = field[1] or ''
@@ -218,20 +237,24 @@ class LocalCodeGen:
             java_type = ''
             jdbc_type = ''
             ts_type = ''
-            if field_type in ['varchar', 'text', 'mediumtext']:
+            if field_type in ['varchar', 'text', 'mediumtext', 'longtext']:
                 java_type = 'String'
                 jdbc_type = 'VARCHAR'
                 ts_type = 'string'
-            elif field_type == 'int':
+            elif field_type in ['int']:
                 java_type = 'Integer'
                 jdbc_type = 'INTEGER'
+                ts_type = 'number'
+            elif field_type in ['tinyint']:
+                java_type = 'Integer'
+                jdbc_type = 'TINYINT'
                 ts_type = 'number'
             elif field_type == 'bigint':
                 java_type = 'Long'
                 jdbc_type = 'BIGINT'
                 ts_type = 'string'
             elif field_type == 'decimal':
-                java_type = 'double'
+                java_type = 'Double'
                 jdbc_type = 'DECIMAL'
                 ts_type = 'number'
             elif field_type == 'date':
@@ -243,7 +266,7 @@ class LocalCodeGen:
                 jdbc_type = 'TIMESTAMP'
                 ts_type = 'string'
 
-            if field_type in ['text', 'mediumtext']:
+            if field_type in ['text', 'mediumtext', 'longtext']:
                 jdbc_type = 'LONGVARCHAR'
 
             if flag.__contains__('NOT_NULL'):
@@ -405,29 +428,45 @@ if __name__ == '__main__':
     # # 明材模板 后端
     # table_names = get_db_table_names('mint', include_table_names)
     # src = r'D:\source\template_file'
-    # source_root = r'D:\source\mint-server\server'
-    # codeGen.gen_code(src, source_root, table_names, 'mint')
+    # source_root = r'D:\source\mint-server\ser
 
+    # 前端
+    include_table_names = ''
+    table_names = get_db_table_names('ai_qgb_dev', include_table_names)
+    template_src = r'D:\source\code-template\web'
+    source_root = r'D:\source\ai-qgb-mini-program'
+    remove_table_prefix = 'aq_'
+    codeGen.gen_code(template_src, source_root, table_names, 'ai_qgb_dev', remove_table_prefix)
 
-    # 数字化教材 前端
-    include_table_names = 'user_lesson_note'
-    table_names = get_db_table_names('digital-books', include_table_names)
-    src = r'D:\source\digital-books-template\web'
-    source_root = r'D:\source\digital-books-portal'
-    # source_root = r'D:\source\mint-admin'
-    codeGen.gen_code(src, source_root, table_names, 'digital-books')
+    # 后端
+    template_src = r'D:\source\code-template\java'
+    remove_table_prefix = 'aq_'
 
-    # 数字化教材 后端
-    table_names = get_db_table_names('digital-books', include_table_names)
-    src = r'D:\source\digital-books-template\java'
-    source_root = r'D:\source\digital-books-api\digital-books-service'
-    codeGen.gen_code(src, source_root, table_names, 'digital-books')
-    
+    groups = [
+        {
+            'source_root': r'D:\source\ai-qgb-mini-program-api\commons\auth',
+            'vars': {
+                'module_name': 'auth'
+            },
+            'include_table_names': '-'  # 'aq_user,aq_sys_user'
+        },
+        {
+            'source_root': r'D:\source\ai-qgb-mini-program-api\modules\ai-qgb-api',
+            'vars': {
+                'module_name': 'aiqgb'
+            },
+            'include_table_names': 'aq_order,aq_group_buy_order,aq_message_template,aq_message_task,aq_message_history'
+        },
+    ]
+
+    for item in groups:
+        table_names = get_db_table_names('ai_qgb_dev', item['include_table_names'])
+        codeGen.gen_code(template_src, item['source_root'], table_names, 'ai_qgb_dev', remove_table_prefix, item['vars'])
+
     # d:
     # cd D:\source\biu-service
     # set PYTHONPATH=%PYTHONPATH%;D:\source\biu-service
     # python util\local_code_gen.py
-    
 
     # while True:
     #     codeGen.gen_code(src, source_root, table_names, 'mint')

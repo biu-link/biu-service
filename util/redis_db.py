@@ -10,13 +10,19 @@ from common.singleton import Singleton
 class RedisDB(metaclass=Singleton):
     __pool = None
 
-    def __init__(self):
+    def __init__(self, config=None):
         super(RedisDB, self).__init__()
-        cfg = tools.get_config_section('redis')
-        host = cfg.get('host')
-        port = cfg.get('port')
-        password = cfg.get('password')
-        self.__pool = redis.ConnectionPool(max_connections=10, host=host, port=port, password=password, decode_responses=True)
+        if config:
+            pass
+        else:
+            config = tools.get_config_section('redis')
+
+        host = config.get('host')
+        port = config.get('port')
+        password = config.get('password')
+        database = config.get('database')
+
+        self.__pool = redis.ConnectionPool(max_connections=10, host=host, port=port, password=password, db=database, decode_responses=True)
         self.r = redis.Redis(connection_pool=self.__pool)
 
     def get(self, key):
@@ -35,3 +41,9 @@ class RedisDB(metaclass=Singleton):
 
     def delete(self, key):
         self.r.delete(key)
+
+    def keys(self, pattern):
+        return self.r.keys(pattern)
+
+    def expire(self, key, seconds):
+        self.r.expire(key, seconds)

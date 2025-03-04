@@ -1,0 +1,3 @@
+from load_table_message_template import load_table_message_template
+
+load_table_message_template()

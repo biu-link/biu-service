@@ -11,21 +11,24 @@ class MysqlDB:
     __conn = None
     __cursor = None
 
-    def __init__(self):
-        self.__conn = MysqlDB.__get_conn()
+    def __init__(self, config_section=None):
+        if config_section is None:
+            config_section = 'mysql'
+
+        self.__conn = MysqlDB.__get_conn(config_section)
         self.__cursor = self.__conn.cursor()
 
     @staticmethod
-    def __get_conn():
+    def __get_conn(config_section):
         if MysqlDB.__pool is None:
-            cfg = tools.get_config_section('mysql')
+            cfg = tools.get_config_section(config_section)
             MysqlDB.__pool = PooledDB(creator=pymysql,
                                       mincached=1,
                                       maxcached=20,
                                       host=cfg.get('host'),
                                       port=cfg.get('port'),
                                       user=cfg.get('user'),
-                                      passwd=cfg.get('password'),
+                                      passwd=str(cfg.get('password')),
                                       db=cfg.get('db_name'),
                                       use_unicode=True,
                                       charset='utf8mb4',
@@ -130,6 +133,15 @@ class MysqlDB:
         print(params)
         count = self.__execute(sql, params)
         return count
+
+    def insert_or_update_model(self, table_name, model):
+
+        row_id = model['id']
+        row = self.single(fr'select * from {table_name} where id = {row_id}')
+        if row is None:
+            self.insert_model(table_name, model)
+        else:
+            self.update_model(table_name, model)
 
     def begin(self):
         """

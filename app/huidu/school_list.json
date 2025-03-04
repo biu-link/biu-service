@@ -1,0 +1,322 @@
+[
+  {
+    "dept_id": 402,
+    "dept_name": "*八坼小学"
+  },
+  {
+    "dept_id": 403,
+    "dept_name": "*八都学校"
+  },
+  {
+    "dept_id": 404,
+    "dept_name": "*八都学校立国"
+  },
+  {
+    "dept_id": 405,
+    "dept_name": "*北门小学"
+  },
+  {
+    "dept_id": 406,
+    "dept_name": "*北门小学团结校区"
+  },
+  {
+    "dept_id": 407,
+    "dept_name": "*北厍小学"
+  },
+  {
+    "dept_id": 408,
+    "dept_name": "*滨之湖实验"
+  },
+  {
+    "dept_id": 409,
+    "dept_name": "*程开甲东校区"
+  },
+  {
+    "dept_id": 410,
+    "dept_name": "*程开甲小学"
+  },
+  {
+    "dept_id": 411,
+    "dept_name": "*绸都小学"
+  },
+  {
+    "dept_id": 412,
+    "dept_name": "*绸都小学盛东校区"
+  },
+  {
+    "dept_id": 413,
+    "dept_name": "*存志外校"
+  },
+  {
+    "dept_id": 414,
+    "dept_name": "*道雅外国语学校"
+  },
+  {
+    "dept_id": 415,
+    "dept_name": "*东太湖实小"
+  },
+  {
+    "dept_id": 416,
+    "dept_name": "*汾湖实小"
+  },
+  {
+    "dept_id": 417,
+    "dept_name": "*横扇学校"
+  },
+  {
+    "dept_id": 418,
+    "dept_name": "*宏鸣可小学"
+  },
+  {
+    "dept_id": 419,
+    "dept_name": "*花港迎春"
+  },
+  {
+    "dept_id": 420,
+    "dept_name": "*花港迎春明泉校区"
+  },
+  {
+    "dept_id": 421,
+    "dept_name": "*黄家溪小学"
+  },
+  {
+    "dept_id": 422,
+    "dept_name": "*江村实验"
+  },
+  {
+    "dept_id": 423,
+    "dept_name": "*江陵吉市路齐心"
+  },
+  {
+    "dept_id": 424,
+    "dept_name": "*江陵实小三淞路"
+  },
+  {
+    "dept_id": 425,
+    "dept_name": "*江陵实小淞南路"
+  },
+  {
+    "dept_id": 426,
+    "dept_name": "*江陵实小绣湖东路"
+  },
+  {
+    "dept_id": 427,
+    "dept_name": "*金家坝学校"
+  },
+  {
+    "dept_id": 428,
+    "dept_name": "*黎里小学"
+  },
+  {
+    "dept_id": 429,
+    "dept_name": "*黎里小学梨花校区"
+  },
+  {
+    "dept_id": 430,
+    "dept_name": "*芦墟实小"
+  },
+  {
+    "dept_id": 431,
+    "dept_name": "*鲈实小流虹"
+  },
+  {
+    "dept_id": 432,
+    "dept_name": "*鲈实小越秀"
+  },
+  {
+    "dept_id": 433,
+    "dept_name": "*鲈实小仲英"
+  },
+  {
+    "dept_id": 434,
+    "dept_name": "*梅堰实小"
+  },
+  {
+    "dept_id": 435,
+    "dept_name": "*梅堰实小南校区"
+  },
+  {
+    "dept_id": 436,
+    "dept_name": "*南麻小学"
+  },
+  {
+    "dept_id": 437,
+    "dept_name": "*南麻小学引庆校区"
+  },
+  {
+    "dept_id": 438,
+    "dept_name": "*平望实小"
+  },
+  {
+    "dept_id": 439,
+    "dept_name": "*平望实小北校区"
+  },
+  {
+    "dept_id": 440,
+    "dept_name": "*七都小学"
+  },
+  {
+    "dept_id": 441,
+    "dept_name": "*七都小学吴越校区"
+  },
+  {
+    "dept_id": 442,
+    "dept_name": "*青云学校"
+  },
+  {
+    "dept_id": 443,
+    "dept_name": "*青云学校蒲公英"
+  },
+  {
+    "dept_id": 444,
+    "dept_name": "*区实小爱德"
+  },
+  {
+    "dept_id": 445,
+    "dept_name": "*区实小城中"
+  },
+  {
+    "dept_id": 446,
+    "dept_name": "*区实小太湖"
+  },
+  {
+    "dept_id": 447,
+    "dept_name": "*莘塔小学"
+  },
+  {
+    "dept_id": 448,
+    "dept_name": "*莘塔小学芦北校区"
+  },
+  {
+    "dept_id": 449,
+    "dept_name": "*盛泽实小"
+  },
+  {
+    "dept_id": 450,
+    "dept_name": "*盛泽实小清溪校区"
+  },
+  {
+    "dept_id": 451,
+    "dept_name": "*盛泽小学"
+  },
+  {
+    "dept_id": 452,
+    "dept_name": "*盛泽小学目澜校区"
+  },
+  {
+    "dept_id": 453,
+    "dept_name": "*盛泽小学群铁校区"
+  },
+  {
+    "dept_id": 454,
+    "dept_name": "*盛泽小学兴桥校区"
+  },
+  {
+    "dept_id": 455,
+    "dept_name": "*世恒学校"
+  },
+  {
+    "dept_id": 456,
+    "dept_name": "*水秀实小"
+  },
+  {
+    "dept_id": 457,
+    "dept_name": "*思贤实小"
+  },
+  {
+    "dept_id": 458,
+    "dept_name": "*松陵小学"
+  },
+  {
+    "dept_id": 459,
+    "dept_name": "*苏大附属校"
+  },
+  {
+    "dept_id": 460,
+    "dept_name": "*苏州枫华"
+  },
+  {
+    "dept_id": 461,
+    "dept_name": "*苏州湾实小"
+  },
+  {
+    "dept_id": 462,
+    "dept_name": "*苏州湾外国语学校"
+  },
+  {
+    "dept_id": 463,
+    "dept_name": "*太湖国际"
+  },
+  {
+    "dept_id": 464,
+    "dept_name": "*坛丘小学"
+  },
+  {
+    "dept_id": 465,
+    "dept_name": "*坛丘小学润洋校区"
+  },
+  {
+    "dept_id": 466,
+    "dept_name": "*桃源小学"
+  },
+  {
+    "dept_id": 467,
+    "dept_name": "*天和小学"
+  },
+  {
+    "dept_id": 468,
+    "dept_name": "*同里实小"
+  },
+  {
+    "dept_id": 469,
+    "dept_name": "*铜罗小学"
+  },
+  {
+    "dept_id": 470,
+    "dept_name": "*屯村实小"
+  },
+  {
+    "dept_id": 471,
+    "dept_name": "*菀坪学校"
+  },
+  {
+    "dept_id": 472,
+    "dept_name": "*吴绫实小"
+  },
+  {
+    "dept_id": 473,
+    "dept_name": "*吴绫实小圣塘校区"
+  },
+  {
+    "dept_id": 474,
+    "dept_name": "*新城实小"
+  },
+  {
+    "dept_id": 475,
+    "dept_name": "*新胜实验"
+  },
+  {
+    "dept_id": 476,
+    "dept_name": "*杨嘉墀实小"
+  },
+  {
+    "dept_id": 477,
+    "dept_name": "*云龙实验"
+  },
+  {
+    "dept_id": 478,
+    "dept_name": "*泽新实验"
+  },
+  {
+    "dept_id": 479,
+    "dept_name": "*长安实小"
+  },
+  {
+    "dept_id": 480,
+    "dept_name": "*震泽实小"
+  },
+  {
+    "dept_id": 481,
+    "dept_name": "*震泽实小北校区"
+  }
+]
