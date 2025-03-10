@@ -9,15 +9,15 @@ def gen_sql(primary_id, app_code, phone, ability_ids, expire_time):
 
 
 def main():
-    app_code = '湘诚'
-    primary_id = 1001
+    app_code = 'DrayEasy'
+    primary_id = 1132
     ability_ids = '1001,1003'
-    expire_time = '2026-02-28 23:59:59'
+    expire_time = '2026-03-06 23:59:59'
 
     f = open('ext_user_list.txt', 'r', encoding='utf-8')
     lines = f.readlines()
     for line in lines:
-        line = line.strip()
+        line = line.strip().replace(' ', '')
         if line:
             phone = line
             sql = gen_sql(primary_id, app_code, phone, ability_ids, expire_time)

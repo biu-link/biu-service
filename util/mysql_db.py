@@ -13,7 +13,7 @@ class MysqlDB:
 
     def __init__(self, config_section=None):
         if config_section is None:
-            config_section = 'mysql'
+            config_section = 'mysql_dev'
 
         self.__conn = MysqlDB.__get_conn(config_section)
         self.__cursor = self.__conn.cursor()

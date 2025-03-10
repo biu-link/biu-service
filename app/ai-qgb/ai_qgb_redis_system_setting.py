@@ -33,15 +33,14 @@ titleStyle = {
 }
 
 textStyle = {
-    "font-size": "34rpx",
+    "font-size": "26rpx",
     "color": "#666666",
-    "line-height": "44rpx",
-    "padding": "4rpx 30rpx 20rpx 30rpx",
+    "padding": "4rpx 30rpx 60rpx 30rpx",
     "display": "block"
 }
 
 imageStyle = {
-    "padding": "0 30rpx",
+    "padding": "0 0rpx",
     "display": "flex",
     "justify-content": "center",
     "width": "100%",
@@ -70,7 +69,7 @@ value = {
     "layout_items": [
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/banner.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/banner%402x.png",
             "style": {
                 "width": "100%",
                 "height": "450rpx"
@@ -78,62 +77,36 @@ value = {
         },
         {
             "type": "title",
-            "text": "全球商品一键归类",
+            "text": "AI清关宝会员(月卡)",
             "style": titleStyle,
         },
         {
             "type": "text",
-            "text": "税率、加征、认证等信息一目了然",
+            "text": "AI商品智能归类 / 美国进口税金计算器",
             "style": textStyle,
         },
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/01.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/01%402x.png",
             "style": {
                 **imageStyle,
-                "height": "534rpx",
+                "height": "889rpx",
             }
         },
         {
-            "type": "title",
-            "text": "商品信息详细",
-            "style": {
-                **titleStyle,
-                "padding-top": "50rpx"
-            },
-        },
-        {
-            "type": "text",
-            "text": "准确，支持中英文翻译",
-            "style": textStyle,
-        },
-        {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/02.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/02%402x.png",
             "style": {
                 **imageStyle,
-                "height": "534rpx",
+                "height": "874rpx",
             }
         },
         {
-            "type": "title",
-            "text": "附带进口税金计算器",
-            "style": {
-                **titleStyle,
-                "padding-top": "50rpx"
-            },
-        },
-        {
-            "type": "text",
-            "text": "税金信息准确不遗漏",
-            "style": textStyle,
-        },
-        {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/03.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/03_0306.png",
             "style": {
                 **imageStyle,
-                "height": "682rpx",
+                "height": "1115rpx",
             }
         }
     ],
@@ -199,6 +172,15 @@ value = {
     'share': {
         'image_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/share-default.png'
     },
+    # 团购订阅消息模版id
+    'group_buy_subscribe_template_ids': [
+        'JapbzjBiuguW_ATwdrIl-OjbkwXjui-QMCmmbIrvdcU',
+        'WGKGkp8r6M8JOzXZVvAtLadgwlJrImAp9LOgvGVxoVU',
+        's6EButqdpl7BWD3xOc11WviHvR7Yx8XMwWMJkNk6MC8',
+    ],
+    'invite_join_group_text': '可邀请好友继续参与拼团',
+    'join_now_text': '超实用!快来和我一起拼团吧!',
+    'invite_join_group_promotion': '仅剩 <span style="color:#FF6600;">{remain_people}</span> 人,快呼唤小伙伴参加吧!',
     'special_tariff': {  # 对中加征税率
         'fix_rate': '20%',
         'exclude_pattern': '^980200(40|50|60|80)\\d+$',
@@ -421,8 +403,32 @@ value = {
             'rate': 0.00125  # 费率
         },
         'tip': '* 本计算器根据 Formal Entry(T01) 清关模式进行计算。Inform Entry(T11) 税金计算器即将上线，敬请期待!',
-    }
+    },
+    # 弹窗海报
+    'ad_popup_list': [
+        {
+            'enabled': 1,
+            'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/ad-popup-20250306.png',
+            'link': '/pages/product/product-buy?packageCode=hs_code_member&tid=1012',
+            'quiet_second': 14400,
+            'pages': [
+                'pages/classification/home/home',
+                'pages/classification/calculator/calculator',
+                'pages/classification/calculator/calculator-page',
+                'pages/classification/search-by-name/search-by-name',
+                'pages/my/my/my',
+            ]
+        }
+    ],
+    'home_banner_list': [
+        {
+            'enabled': 1,
+            'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/home-banner-01.png',
+            'link': '/pages/product/product-buy?packageCode=hs_code_member&tid=1013',
+        }
+    ]
 }
+
 redis.set(code, json.dumps(value, ensure_ascii=False))
 value = redis.get(code)
 print(value)
