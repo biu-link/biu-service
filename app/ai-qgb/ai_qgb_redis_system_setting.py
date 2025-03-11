@@ -218,6 +218,20 @@ value = {
         {  # 墨西哥 加征 25%
             'fix_rate': '25%',
             'include_country_list': ['MX'],
+            'hs_code_rules': [
+                {
+                    'patterns': ['^980200(40|50|60|80)\\d+$'],
+                    'type': 'include',
+                },
+                {
+                    'patterns': ['^98\\d+$'],
+                    'type': 'exclude',
+                },
+                {
+                    'patterns': ['^\\d+$'],
+                    'type': 'include',
+                },
+            ],
             'exclude_pattern': '^98\\d+$',
             'include_pattern': '^980200(40|50|60|80)\\d+$',
             'special_code': '99030101',
@@ -242,6 +256,20 @@ value = {
         {  # 加拿大 加征 25%
             'fix_rate': '25%',
             'include_country_list': ['CA'],
+            'hs_code_rules': [
+                {
+                    'patterns': ['^980200(40|50|60|80)\\d+$'],
+                    'type': 'include',
+                },
+                {
+                    'patterns': ['^98\\d+$'],
+                    'type': 'exclude',
+                },
+                {
+                    'patterns': ['^\\d+$'],
+                    'type': 'include',
+                },
+            ],
             'exclude_pattern': '^98\\d+$',
             'include_pattern': '^980200(40|50|60|80)\\d+$',
             'special_code': '99030110',
