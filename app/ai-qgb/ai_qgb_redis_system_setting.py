@@ -218,20 +218,46 @@ value = {
         {  # 墨西哥 加征 25%
             'fix_rate': '25%',
             'include_country_list': ['MX'],
-            'hs_code_rules': [
+            'rules': [
                 {
-                    'patterns': ['^980200(40|50|60|80)\\d+$'],
-                    'type': 'include',
-                },
-                {
-                    'patterns': ['^98\\d+$'],
-                    'type': 'exclude',
-                },
-                {
-                    'patterns': ['^\\d+$'],
-                    'type': 'include',
-                },
+                    'code_matchers': [
+                        {
+                            'patterns': ['^980200(40|50|60|80)\\d+$'],
+                            'type': 'include',
+                        },
+                        {
+                            'patterns': ['^98\\d+$'],
+                            'type': 'exclude',
+                        },
+                        {
+                            'patterns': ['^\\d+$'],
+                            'type': 'include',
+                        },
+                    ],
+                    'special_code': '99030101',
+                }
             ],
+
+            'special_describes': {
+                '99030101': [
+                    {
+                        'specialDescribeCn': '<b>9903.01.01（加征）</b><br>除可归类为标题 9903.01.02 和 9903.01.03 的商品以及抵达美国的旅客随身行李中的个人使用商品外，所有进口的墨西哥商品均需额外缴纳 25% 的从价税。',
+                        'specialDescribeEn': 'All imports of articles that are products of Mexico, other than products classifiable under headings 9903.01.02 and 9903.01.03 and other than products for personal use included in accompanied baggage of persons arriving in the United States will be assessed an additional ad valorem rate of duty of 25%.',
+                        'effectiveDate': '20250304'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.01.02（豁免）</b><br>由受美国管辖的人捐赠用于减轻人类痛苦的物品，如食品、衣服和药品，属于墨西哥产品的物品。',
+                        'specialDescribeEn': 'Articles the product of Mexico that are donations, by persons subject to the jurisdiction of the United States, of articles, such as food, clothing, and medicine, intended to be used to relieve human suffering.',
+                        'effectiveDate': '20250304'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.01.03（豁免）</b><br>属于墨西哥商品且属于信息材料的物品，包括但不限于出版物、电影、海报、留声机唱片、照片、缩微胶卷、缩微胶片、磁带、光盘、CD ROM、插图和新闻馈送。',
+                        'specialDescribeEn': 'Articles the product of Mexico that are informational materials, including but not limited to, publications, films, posters, phonograph records, photographs, microfilms, microfiche, tapes, compact disks, CD ROMs, artworks, and news wire feeds.',
+                        'effectiveDate': '20250304'
+                    },
+                ]
+            },
+
             'exclude_pattern': '^98\\d+$',
             'include_pattern': '^980200(40|50|60|80)\\d+$',
             'special_code': '99030101',
@@ -256,20 +282,45 @@ value = {
         {  # 加拿大 加征 25%
             'fix_rate': '25%',
             'include_country_list': ['CA'],
-            'hs_code_rules': [
+            'rules': [
                 {
-                    'patterns': ['^980200(40|50|60|80)\\d+$'],
-                    'type': 'include',
-                },
-                {
-                    'patterns': ['^98\\d+$'],
-                    'type': 'exclude',
-                },
-                {
-                    'patterns': ['^\\d+$'],
-                    'type': 'include',
-                },
+                    'code_matchers': [
+                        {
+                            'patterns': ['^980200(40|50|60|80)\\d+$'],
+                            'type': 'include',
+                        },
+                        {
+                            'patterns': ['^98\\d+$'],
+                            'type': 'exclude',
+                        },
+                        {
+                            'patterns': ['^\\d+$'],
+                            'type': 'include',
+                        },
+                    ],
+                    'special_code': '99030110',
+                }
             ],
+
+            'special_describes': {
+                '99030110': [
+                    {
+                        'specialDescribeCn': '<b>9903.01.10（加征）</b><br>除可归类为标题 9903.01.11、9903.01.12 和 9903.01.13 的商品外，所有进口的加拿大商品，以及抵达美国的旅客随身行李中的个人使用商品除外，将额外征收 25% 的从价税率。',
+                        'specialDescribeEn': 'All imports of articles that are products of Canada, other than products classifiable under headings 9903.01.11, 9903.01.12, and 9903.01.13, and other than products for personal use included in accompanied baggage of persons arriving in the United States, will be assessed an additional ad valorem rate of duty of 25%.',
+                        'effectiveDate': '20250304'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.01.11（豁免）</b><br>由受美国管辖的人捐赠的加拿大产品物品，用于减轻人类痛苦的物品，例如食品、衣服和药品。',
+                        'specialDescribeEn': 'Articles the product of Canada that are donations, by persons subject to the jurisdiction of the United States, of articles, such as food, clothing, and medicine, intended to be used to relieve human suffering.',
+                        'effectiveDate': '20250304'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.01.12（豁免）</b><br>属于加拿大商品且属于信息材料的物品，包括但不限于出版物、电影、海报、留声机唱片、照片、缩微胶卷、缩微胶片、磁带、光盘、CD ROM、艺术品和新闻馈送。',
+                        'specialDescribeEn': 'Articles the product of Canada that are informational materials, including but not limited to, publications, films, posters, phonograph records, photographs, microfilms, microfiche, tapes, compact disks, CD ROMs, artworks, and news wire feeds.',
+                        'effectiveDate': '20250304'
+                    },
+                ]
+            },
             'exclude_pattern': '^98\\d+$',
             'include_pattern': '^980200(40|50|60|80)\\d+$',
             'special_code': '99030110',
