@@ -234,28 +234,42 @@ value = {
                             'type': 'include',
                         },
                     ],
-                    'special_code': ['99030101'],
+                    'special_code': ['99030101/99030105', '99030102', '99030103'],
                 }
             ],
 
             'special_describes': {
-                '99030101': [
+                '99030101/99030105': [
                     {
                         'specialDescribeCn': '<b>9903.01.01（加征）</b><br>除可归类为标题 9903.01.02 和 9903.01.03 的商品以及抵达美国的旅客随身行李中的个人使用商品外，所有进口的墨西哥商品均需额外缴纳 25% 的从价税。',
                         'specialDescribeEn': 'All imports of articles that are products of Mexico, other than products classifiable under headings 9903.01.02 and 9903.01.03 and other than products for personal use included in accompanied baggage of persons arriving in the United States will be assessed an additional ad valorem rate of duty of 25%.',
-                        'effectiveDate': '20250304'
+                        'effectiveDate': '20250304',
+                        'specialInfo': '25%/10%'
                     },
+                    {
+                        'specialDescribeCn': '<b>9903.01.05（加征）</b><br>如美国本子章注释2(c)所规定，作为墨西哥产品的钾盐',
+                        'specialDescribeEn': 'Potash that is a product of Mexico, as provided for in U.S. note 2(c) to this subchapter.',
+                        'effectiveDate': '20250306',
+                    },
+                ],
+                '99030102': [
                     {
                         'specialDescribeCn': '<b>9903.01.02（豁免）</b><br>由受美国管辖的人捐赠用于减轻人类痛苦的物品，如食品、衣服和药品，属于墨西哥产品的物品。',
                         'specialDescribeEn': 'Articles the product of Mexico that are donations, by persons subject to the jurisdiction of the United States, of articles, such as food, clothing, and medicine, intended to be used to relieve human suffering.',
-                        'effectiveDate': '20250304'
+                        'effectiveDate': '20250304',
+                        'exempting': '有',
+                        'specialInfo': '有'
                     },
+                ],
+                '99030103': [
                     {
                         'specialDescribeCn': '<b>9903.01.03（豁免）</b><br>属于墨西哥商品且属于信息材料的物品，包括但不限于出版物、电影、海报、留声机唱片、照片、缩微胶卷、缩微胶片、磁带、光盘、CD ROM、插图和新闻馈送。',
                         'specialDescribeEn': 'Articles the product of Mexico that are informational materials, including but not limited to, publications, films, posters, phonograph records, photographs, microfilms, microfiche, tapes, compact disks, CD ROMs, artworks, and news wire feeds.',
-                        'effectiveDate': '20250304'
-                    },
-                ]
+                        'effectiveDate': '20250304',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    }
+                ],
             },
 
         },
@@ -278,26 +292,104 @@ value = {
                             'type': 'include',
                         },
                     ],
-                    'special_code': ['99030110'],
+                    'special_code': ['99030110/99030115', '99030111', '99030112'],
                 }
             ],
 
             'special_describes': {
-                '99030110': [
+                '99030110/99030115': [
                     {
                         'specialDescribeCn': '<b>9903.01.10（加征）</b><br>除可归类为标题 9903.01.11、9903.01.12 和 9903.01.13 的商品外，所有进口的加拿大商品，以及抵达美国的旅客随身行李中的个人使用商品除外，将额外征收 25% 的从价税率。',
                         'specialDescribeEn': 'All imports of articles that are products of Canada, other than products classifiable under headings 9903.01.11, 9903.01.12, and 9903.01.13, and other than products for personal use included in accompanied baggage of persons arriving in the United States, will be assessed an additional ad valorem rate of duty of 25%.',
-                        'effectiveDate': '20250304'
+                        'effectiveDate': '20250304',
+                        'specialInfo': '25%/10%',
                     },
+                    {
+                        'specialDescribeCn': '<b>9903.01.15（加征）</b><br>如美国本子章注释2(I)所规定，作为加拿大产品的钾盐',
+                        'specialDescribeEn': 'Potash that is a product of Canada, as provided for in U.S. note 2(I) to this subchapter',
+                        'effectiveDate': '20250306',
+                        'specialInfo': '10%',
+                    },
+                ],
+                '99030111': [
                     {
                         'specialDescribeCn': '<b>9903.01.11（豁免）</b><br>由受美国管辖的人捐赠的加拿大产品物品，用于减轻人类痛苦的物品，例如食品、衣服和药品。',
                         'specialDescribeEn': 'Articles the product of Canada that are donations, by persons subject to the jurisdiction of the United States, of articles, such as food, clothing, and medicine, intended to be used to relieve human suffering.',
-                        'effectiveDate': '20250304'
+                        'effectiveDate': '20250304',
+                        'exempting': '有',
+                        'specialInfo': '有'
                     },
+                ],
+                '99030112': [
                     {
                         'specialDescribeCn': '<b>9903.01.12（豁免）</b><br>属于加拿大商品且属于信息材料的物品，包括但不限于出版物、电影、海报、留声机唱片、照片、缩微胶卷、缩微胶片、磁带、光盘、CD ROM、艺术品和新闻馈送。',
                         'specialDescribeEn': 'Articles the product of Canada that are informational materials, including but not limited to, publications, films, posters, phonograph records, photographs, microfilms, microfiche, tapes, compact disks, CD ROMs, artworks, and news wire feeds.',
-                        'effectiveDate': '20250304'
+                        'effectiveDate': '20250304',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    },
+                ]
+            },
+
+        },
+
+        {  # 墨西哥 美墨加协定进口关税FREE
+            'fix_rate': '-',  # 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
+            'include_country_list': ['MX'],
+            'rules': [
+                {
+                    'code_matchers': [
+                        {
+                            'custom': 'usmca',  # hscode 前 8 位存在于 usmca 中
+                            'type': 'include',
+                        }
+                    ],
+                    'special_code': ['99030104'],  # 豁免
+                }
+            ],
+
+            'special_rate_of_duty': 'United States-Mexico-Canada-Agreement (USMCA)',
+            'special_rate_of_duty_explanation': 'United States-Mexico-Canada-Agreement (USMCA)<br>美墨加协定进口关税FREE',
+
+            'special_describes': {
+                '99030104': [
+                    {
+                        'specialDescribeCn': '根据《协调关税表》(HTSUS) 总注11的条款，以及《协调关税表》第98章第XXIII分章和第99章第XXII分章中与《美墨加协定》(USMCA) 相关的任何规定，免税进口的商品。',
+                        'specialDescribeEn': 'Articles that are entered free of duty under the terms of general note 11 to the HTSUS, including any treatment set forth in subchapter XXIII of chapter 98 and subchapter XXII of chapter 99 of the HTS, as related to the USMCA.',
+                        'effectiveDate': '20250306',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    },
+                ]
+            },
+        },
+
+        {  # 加拿大 美墨加协定进口关税FREE
+            'fix_rate': '-',  # 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
+            'include_country_list': ['CA'],
+            'rules': [
+                {
+                    'code_matchers': [
+                        {
+                            'custom': 'usmca',  # hscode 前 8 位存在于 usmca 中
+                            'type': 'include',
+                        }
+                    ],
+                    'special_code': ['99030114'],  # 豁免
+                }
+            ],
+
+            'special_rate_of_duty': 'United States-Mexico-Canada-Agreement (USMCA)',
+            'special_rate_of_duty_explanation': 'United States-Mexico-Canada-Agreement (USMCA)<br>美墨加协定进口关税FREE',
+
+            'special_describes': {
+                '99030114': [
+                    {
+                        'specialDescribeCn': '根据《协调关税表》(HTSUS) 总注11的条款，以及《协调关税表》第98章第XXIII分章和第99章第XXII分章中与《美墨加协定》(USMCA) 相关的任何规定，免税进口的商品。',
+                        'specialDescribeEn': 'Articles that are entered free of duty under the terms of general note 11 to the HTSUS, including any treatment set forth in subchapter XXIII of chapter 98 and subchapter XXII of chapter 99 of the HTS, as related to the USMCA.',
+                        'effectiveDate': '20250306',
+                        'exempting': '有',
+                        'specialInfo': '有'
                     },
                 ]
             },
@@ -485,7 +577,7 @@ value = {
                     'code_matchers': [
                         {
                             'patterns': ['^(73170030|87081030|87082921)\\d+$'],
-                            'codes': ['7317005503','7317005505','7317005507','7317005560','7317005580','7317006560'],
+                            'codes': ['7317005503', '7317005505', '7317005507', '7317005560', '7317005580', '7317006560'],
                             'type': 'include',
                         }
                     ],
