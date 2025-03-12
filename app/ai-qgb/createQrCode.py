@@ -60,107 +60,114 @@ def create_sql(channel_id, name, remark):
 
 def main():
     channels = [
+        # {
+        #     'channel_id': 1001,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '推文',
+        #     'remark': '最航运公众号推文-20250207'
+        # },
+        # {
+        #     'channel_id': 1002,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '个人推广',
+        #     'remark': '庄叔专属'
+        # },
+        # {
+        #     'channel_id': 1003,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '公众号菜单',
+        #     'remark': '关师兄公众号菜单(首页)'
+        # },
+        # {
+        #     'channel_id': 1004,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '公众号菜单',
+        #     'remark': '关师兄公众号菜单(计算器)'
+        # },
+        # {
+        #     'channel_id': 1005,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '公众号菜单',
+        #     'remark': '关师兄公众号菜单(联系我们)'
+        # },
+        # {
+        #     'channel_id': 1006,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '业务系统广告位',
+        #     'remark': '货代广告位 - 横版智能归类'
+        # },
+        # {
+        #     'channel_id': 1007,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '业务系统广告位',
+        #     'remark': '货代广告位 - 竖版税金计算器'
+        # },
+        # {
+        #     'channel_id': 1008,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '业务系统广告位',
+        #     'remark': '货主广告位 - 横版智能归类'
+        # },
+        # {
+        #     'channel_id': 1009,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '业务系统广告位',
+        #     'remark': '货主广告位 - 横版税金计算器'
+        # },
+        # {
+        #     'channel_id': 1010,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '个人推广',
+        #     'remark': '货代广告位 - 横版税金计算器+大庄朋友圈分享'
+        # },
+        # {
+        #     'channel_id': 1011,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '个人推广',
+        #     'remark': '美国关税计算器 -- 大庄朋友圈分享'
+        # },
+        # {
+        #     'channel_id': 1012,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '系统内广告',
+        #     'remark': '小程序弹窗海报'
+        # },
+        # {
+        #     'channel_id': 1013,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '系统内广告',
+        #     'remark': '小程序首页Banner'
+        # },
+        # {
+        #     'channel_id': 1014,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '推文',
+        #     'remark': '最航运公众号推文(首页)-20250309'
+        # },
+        # {
+        #     'channel_id': 1015,
+        #     'path': 'pages/classification/calculator/calculator',
+        #     'name': '推文',
+        #     'remark': '最航运公众号推文(计算器)-20250309'
+        # },
+        # {
+        #     'channel_id': 1016,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '推文',
+        #     'remark': '壹流龙媒(首页)-20250309'
+        # },
+        # {
+        #     'channel_id': 1017,
+        #     'path': 'pages/classification/calculator/calculator',
+        #     'name': '推文',
+        #     'remark': '壹流龙媒(计算器)-20250309'
+        # },
+
         {
-            'channel_id': 1001,
+            'channel_id': 1018,
             'path': 'pages/classification/home/home',
-            'name': '推文',
-            'remark': '最航运公众号推文-20250207'
-        },
-        {
-            'channel_id': 1002,
-            'path': 'pages/classification/home/home',
-            'name': '个人推广',
-            'remark': '庄叔专属'
-        },
-        {
-            'channel_id': 1003,
-            'path': 'pages/classification/home/home',
-            'name': '公众号菜单',
-            'remark': '关师兄公众号菜单(首页)'
-        },
-        {
-            'channel_id': 1004,
-            'path': 'pages/classification/home/home',
-            'name': '公众号菜单',
-            'remark': '关师兄公众号菜单(计算器)'
-        },
-        {
-            'channel_id': 1005,
-            'path': 'pages/classification/home/home',
-            'name': '公众号菜单',
-            'remark': '关师兄公众号菜单(联系我们)'
-        },
-        {
-            'channel_id': 1006,
-            'path': 'pages/classification/home/home',
-            'name': '业务系统广告位',
-            'remark': '货代广告位 - 横版智能归类'
-        },
-        {
-            'channel_id': 1007,
-            'path': 'pages/classification/home/home',
-            'name': '业务系统广告位',
-            'remark': '货代广告位 - 竖版税金计算器'
-        },
-        {
-            'channel_id': 1008,
-            'path': 'pages/classification/home/home',
-            'name': '业务系统广告位',
-            'remark': '货主广告位 - 横版智能归类'
-        },
-        {
-            'channel_id': 1009,
-            'path': 'pages/classification/home/home',
-            'name': '业务系统广告位',
-            'remark': '货主广告位 - 横版税金计算器'
-        },
-        {
-            'channel_id': 1010,
-            'path': 'pages/classification/home/home',
-            'name': '个人推广',
-            'remark': '货代广告位 - 横版税金计算器+大庄朋友圈分享'
-        },
-        {
-            'channel_id': 1011,
-            'path': 'pages/classification/home/home',
-            'name': '个人推广',
-            'remark': '美国关税计算器 -- 大庄朋友圈分享'
-        },
-        {
-            'channel_id': 1012,
-            'path': 'pages/classification/home/home',
-            'name': '系统内广告',
-            'remark': '小程序弹窗海报'
-        },
-        {
-            'channel_id': 1013,
-            'path': 'pages/classification/home/home',
-            'name': '系统内广告',
-            'remark': '小程序首页Banner'
-        },
-        {
-            'channel_id': 1014,
-            'path': 'pages/classification/home/home',
-            'name': '推文',
-            'remark': '最航运公众号推文(首页)-20250309'
-        },
-        {
-            'channel_id': 1015,
-            'path': 'pages/classification/calculator/calculator',
-            'name': '推文',
-            'remark': '最航运公众号推文(计算器)-20250309'
-        },
-        {
-            'channel_id': 1016,
-            'path': 'pages/classification/home/home',
-            'name': '推文',
-            'remark': '壹流龙媒(首页)-20250309'
-        },
-        {
-            'channel_id': 1017,
-            'path': 'pages/classification/calculator/calculator',
-            'name': '推文',
-            'remark': '壹流龙媒(计算器)-20250309'
+            'name': '名片',
+            'remark': ''
         },
     ]
 
@@ -171,7 +178,7 @@ def main():
         remark = channel['remark']
 
         path = path + f'?tid={channel_id}'
-        # create_qrcode(channel_id, path, remark)
+        create_qrcode(channel_id, path, remark)
         create_sql(channel_id, name, remark)
 
 
