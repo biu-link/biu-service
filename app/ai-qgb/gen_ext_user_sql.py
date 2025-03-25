@@ -9,10 +9,10 @@ def gen_sql(primary_id, app_code, phone, ability_ids, expire_time):
 
 
 def main():
-    app_code = 'DrayEasy'
-    primary_id = 1132
+    app_code = '众包'
+    primary_id = 1181
     ability_ids = '1001,1003'
-    expire_time = '2026-03-06 23:59:59'
+    expire_time = '2027-03-14 23:59:59'
 
     f = open('ext_user_list.txt', 'r', encoding='utf-8')
     lines = f.readlines()

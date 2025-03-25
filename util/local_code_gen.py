@@ -455,7 +455,7 @@ if __name__ == '__main__':
             'vars': {
                 'module_name': 'aiqgb'
             },
-            'include_table_names': 'aq_product'
+            'include_table_names': 'aq_mbl_query'
         },
     ]
 

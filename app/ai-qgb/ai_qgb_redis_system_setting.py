@@ -4,6 +4,8 @@ from util.redis_db import RedisDB
 from rate_parse_rules import rate_parse_rules
 from import_country import import_country
 from all_country_list import all_country_list
+from ams_status import ams_status
+
 import json
 
 from util.tools import get_json_file
@@ -117,6 +119,33 @@ redis.set(code, json.dumps(value, ensure_ascii=False))
 value = redis.get(code)
 print(value)
 
+# 清关状态产品购买页设置
+code = 'system_config_public_product_setting_customs_clearance_query'
+value = redis.get(code)
+print(value)
+
+value = {
+    "title": "购买清关状态查询条数",
+    "details": [
+        "1. 查看详细的清关进度，查询状态信息",
+        "2. 专业客服答疑"
+    ],
+    "items": [
+        {"product_id": 3001, "title": "单条查询", "desc": "(单条查询)"},
+        {"product_id": 3002, "title": "8.5折优惠", "desc": "(总共获得50条)", "title_class": "emphasis"},
+        {"product_id": 3003, "title": "6折优惠", "desc": "(总共获得500条)", "title_class": "emphasis"}
+    ],
+    "buy_button": {
+        "text": "立即购买",
+        "save_text": "(已省¥{save_money})"
+    }
+}
+
+redis.set(code, json.dumps(value, ensure_ascii=False))
+
+value = redis.get(code)
+print(value)
+
 # A/B 监管类型字典
 code = 'system_config_public_explanation_list'
 value = open('../explanation_list.json', 'r', encoding='utf-8').read()
@@ -178,9 +207,21 @@ value = {
         'WGKGkp8r6M8JOzXZVvAtLadgwlJrImAp9LOgvGVxoVU',
         's6EButqdpl7BWD3xOc11WviHvR7Yx8XMwWMJkNk6MC8',
     ],
+    # 清关查询状态通知订阅消息模版id
+    'customs_clearance_query_subscribe_template_ids': [
+        'kMmemranbJIvbAtPfVSeJoOJxI1xBgOtDbN1PsCYffo',
+        'kGJJvsSQBogxmJ71sGBbqNC1VclhbTcxjAXQfWmrp80',
+        'MmhfyLUJ1LgfLEUQBcUV-IZdCKL9MMjMj0u9tnogF7c',
+    ],
     'invite_join_group_text': '可邀请好友继续参与拼团',
     'join_now_text': '超实用!快来和我一起拼团吧!',
     'invite_join_group_promotion': '仅剩 <span style="color:#FF6600;">{remain_people}</span> 人,快呼唤小伙伴参加吧!',
+
+    'customs_clearance_query': {
+        'example_mbl': 'HLCUSZX241-DEMO',
+        'no_quota_tip': '您还未购买查询条数',
+        'quota_used_up_tip': '您的搜索条数已用完',
+    },
     'special_tariff': {  # 对中加征税率
         'fix_rate': '20%',
         'exclude_pattern': '^980200(40|50|60|80)\\d+$',
@@ -660,7 +701,7 @@ value = {
     # 弹窗海报
     'ad_popup_list': [
         {
-            'enabled': 1,
+            'enabled': 0,
             'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/ad-popup-20250306.png',
             'link': '/pages/product/product-buy?packageCode=hs_code_member&tid=1012',
             'quiet_second': 14400,
@@ -694,6 +735,12 @@ print(value)
 
 code = 'system_config_general_rate_parse_rules'
 value = rate_parse_rules
+redis.set(code, json.dumps(value, ensure_ascii=False))
+value = redis.get(code)
+print(value)
+
+code = 'system_config_public_ams_status'
+value = ams_status
 redis.set(code, json.dumps(value, ensure_ascii=False))
 value = redis.get(code)
 print(value)
