@@ -63,9 +63,10 @@ value = {
     ],
     "group_buy_product_id": 2001,
     "price_button": {
-        "price": "¥{price}/月",
+        "unit": "月",
+        "price": "{price}",
         "price_text": "直接购买",
-        "group_price": "¥{group_price}/月",
+        "group_price": "{group_price}",
         "group_price_text": "发起 {group_size} 人团",
     },
     "layout_items": [
@@ -138,7 +139,60 @@ value = {
     "buy_button": {
         "text": "立即购买",
         "save_text": "(已省¥{save_money})"
-    }
+    },
+    "group_buy_product_id": 3001,
+    "price_button": {
+        "unit": "条",
+        "price": "{price}",
+        "price_text": "直接购买",
+        "group_price": "{group_price}",
+        "group_price_text": "发起 {group_size} 人团",
+        "group_buy_tag": "开团免费",
+    },
+    "layout_items": [
+        {
+            "type": "image",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/banner%402x.png",
+            "style": {
+                "width": "100%",
+                "height": "450rpx"
+            }
+        },
+        {
+            "type": "title",
+            "text": "AI清关宝会员(月卡)",
+            "style": titleStyle,
+        },
+        {
+            "type": "text",
+            "text": "AI商品智能归类 / 美国进口税金计算器",
+            "style": textStyle,
+        },
+        {
+            "type": "image",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/01%402x.png",
+            "style": {
+                **imageStyle,
+                "height": "889rpx",
+            }
+        },
+        {
+            "type": "image",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/02%402x.png",
+            "style": {
+                **imageStyle,
+                "height": "874rpx",
+            }
+        },
+        {
+            "type": "image",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/03_0306.png",
+            "style": {
+                **imageStyle,
+                "height": "1115rpx",
+            }
+        }
+    ],
 }
 
 redis.set(code, json.dumps(value, ensure_ascii=False))
@@ -209,7 +263,7 @@ value = {
     ],
     # 清关查询状态通知订阅消息模版id
     'customs_clearance_query_subscribe_template_ids': [
-        'kMmemranbJIvbAtPfVSeJoOJxI1xBgOtDbN1PsCYffo',
+        'kMmemranbJIvbAtPfVSeJqP0wCO6dG0LrjlQ1Xeo7Q8',
         'kGJJvsSQBogxmJ71sGBbqNC1VclhbTcxjAXQfWmrp80',
         'MmhfyLUJ1LgfLEUQBcUV-IZdCKL9MMjMj0u9tnogF7c',
     ],
@@ -218,12 +272,13 @@ value = {
     'invite_join_group_promotion': '仅剩 <span style="color:#FF6600;">{remain_people}</span> 人,快呼唤小伙伴参加吧!',
 
     'customs_clearance_query': {
-        'example_mbl': 'HLCUSZX241-DEMO',
+        'example_mbl': 'HLCUSZX241DEMO',
         'no_quota_tip': '您还未购买查询条数',
         'quota_used_up_tip': '您的搜索条数已用完',
     },
-    'special_tariff': {  # 对中加征税率
-        'fix_rate': '20%',
+    'special_tariff': {
+        'fix_rate': '20%',  # 对中加征税率
+        'exclude_search_by_name': 1,
         'exclude_pattern': '^980200(40|50|60|80)\\d+$',
         'special_code': '99030124',
         'describe_list': [
@@ -256,8 +311,8 @@ value = {
 
     },
     'special_tariff_list': [
-        {  # 墨西哥 加征 25%
-            'fix_rate': '25%',
+        {
+            'fix_rate': '25%',  # 墨西哥 加征 25%
             'include_country_list': ['MX'],
             'rules': [
                 {
@@ -314,8 +369,8 @@ value = {
             },
 
         },
-        {  # 加拿大 加征 25%
-            'fix_rate': '25%',
+        {
+            'fix_rate': '25%',  # 加拿大 加征 25%
             'include_country_list': ['CA'],
             'rules': [
                 {
@@ -374,8 +429,8 @@ value = {
 
         },
 
-        {  # 墨西哥 美墨加协定进口关税FREE
-            'fix_rate': '-',  # 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
+        {
+            'fix_rate': '-',  # 墨西哥 美墨加协定进口关税FREE 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
             'include_country_list': ['MX'],
             'rules': [
                 {
@@ -405,8 +460,8 @@ value = {
             },
         },
 
-        {  # 加拿大 美墨加协定进口关税FREE
-            'fix_rate': '-',  # 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
+        {
+            'fix_rate': '-',  # 加拿大 美墨加协定进口关税FREE 用一个短横线表示不需要增加税率，但需要参与后续逻辑处理，此处是后面需要添加豁免规则
             'include_country_list': ['CA'],
             'rules': [
                 {
@@ -437,8 +492,8 @@ value = {
 
         },
 
-        {  # 俄罗斯 加征 200%
-            'fix_rate': '200%',
+        {
+            'fix_rate': '200%',  # 俄罗斯 加征 200%
             'include_country_list': ['RU'],
             'terminate_on_match': True,
             'rules': [
@@ -510,8 +565,9 @@ value = {
             },
         },
 
-        {  # 对全部国家征收钢铝或衍生品  25%
-            'fix_rate': '25%',
+        {
+            'fix_rate': '25%',  # 对全部国家征收钢铝或衍生品  25%
+            'exclude_search_by_name': 0,
             'rules': [
                 {
                     # 对全部国家征收铝-0312 铝制衍生品1

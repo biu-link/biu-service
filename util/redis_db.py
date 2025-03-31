@@ -4,10 +4,8 @@ import util.tools as tools
 import redis
 import json
 
-from common.singleton import Singleton
 
-
-class RedisDB(metaclass=Singleton):
+class RedisDB:
     __pool = None
 
     def __init__(self, config=None):
