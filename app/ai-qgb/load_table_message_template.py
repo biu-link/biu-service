@@ -13,6 +13,7 @@ def load_table_message_template(db):
         row4(db),
         row5(db),
         row6(db),
+        row7(db),
     ]
 
     for row in rows:
@@ -214,4 +215,35 @@ def row6(db):
         'message_type': 'wx_mini_template_message',
         'message_template': json.dumps(message_template, ensure_ascii=False),
         'memo': '订单进度通知'
+    }
+
+
+# 拼团失败通知
+def row7(db):
+    miniprogram_state = 'formal' if db == 'mysql_prod' else 'trial'
+    message_template = {
+        'template_id': 's6EButqdpl7BWD3xOc11WviHvR7Yx8XMwWMJkNk6MC8',
+        'touser': '{{open_id}}',
+        'page': '{{page}}',
+        'miniprogram_state': miniprogram_state,
+        'lang': 'zh_CN',
+        'data': {
+            'thing1': {
+                'value': '{{title}}'
+            },
+            'number3': {
+                'value': '{{need_people}}'
+            },
+            'thing2': {
+                'value': '拼团失败，您可点击卡片重新开团!'
+            },
+        }
+    }
+
+    return {
+        'id': 107,
+        'alias_name': 'group_buy_failure',
+        'message_type': 'wx_mini_template_message',
+        'message_template': json.dumps(message_template, ensure_ascii=False),
+        'memo': '拼团失败通知'
     }

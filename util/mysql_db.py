@@ -143,6 +143,10 @@ class MysqlDB:
         else:
             self.update_model(table_name, model)
 
+    def execute(self, sql):
+        count = self.__execute(sql)
+        return count
+
     def begin(self):
         """
         @summary: 开启事务

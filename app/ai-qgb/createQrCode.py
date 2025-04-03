@@ -163,9 +163,16 @@ def main():
         #     'remark': '壹流龙媒(计算器)-20250309'
         # },
 
+        # {
+        #     'channel_id': 1018,
+        #     'path': 'pages/classification/home/home',
+        #     'name': '名片',
+        #     'remark': ''
+        # },
+
         {
-            'channel_id': 1018,
-            'path': 'pages/classification/home/home',
+            'channel_id': 1019,
+            'path': 'pages/product/product-buy?packageCode=customs_clearance_query&tid=1013',
             'name': '名片',
             'remark': ''
         },

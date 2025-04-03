@@ -152,7 +152,7 @@ value = {
     "layout_items": [
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/banner%402x.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/customs_clearance_query/banner%402x.png",
             "style": {
                 "width": "100%",
                 "height": "450rpx"
@@ -160,25 +160,25 @@ value = {
         },
         {
             "type": "title",
-            "text": "AI清关宝会员(月卡)",
+            "text": "美国清关状态查询",
             "style": titleStyle,
         },
         {
             "type": "text",
-            "text": "AI商品智能归类 / 美国进口税金计算器",
+            "text": "海关状态码详细说明 / 支持子舱单状态查询",
             "style": textStyle,
         },
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/01%402x.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/customs_clearance_query/01%402x.png",
             "style": {
                 **imageStyle,
-                "height": "889rpx",
+                "height": "1534rpx",
             }
         },
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/02%402x.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/customs_clearance_query/02%402x.png",
             "style": {
                 **imageStyle,
                 "height": "874rpx",
@@ -186,10 +186,10 @@ value = {
         },
         {
             "type": "image",
-            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/hs_code_member/03_0306.png",
+            "url": "https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/product/customs_clearance_query/03%402x.png",
             "style": {
                 **imageStyle,
-                "height": "1115rpx",
+                "height": "1010rpx",
             }
         }
     ],
@@ -277,7 +277,7 @@ value = {
         'quota_used_up_tip': '您的搜索条数已用完',
     },
     'special_tariff': {
-        'fix_rate': '20%',  # 对中加征税率
+        'fix_rate': '',  # 对中加征税率
         'exclude_search_by_name': 1,
         'exclude_pattern': '^980200(40|50|60|80)\\d+$',
         'special_code': '99030124',
@@ -756,6 +756,7 @@ value = {
     },
     # 弹窗海报
     'ad_popup_list': [
+        # 智能分类
         {
             'enabled': 0,
             'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/ad-popup-20250306.png',
@@ -766,6 +767,23 @@ value = {
                 'pages/classification/calculator/calculator',
                 'pages/classification/calculator/calculator-page',
                 'pages/classification/search-by-name/search-by-name',
+                'pages/customs/customs-clearance-query',
+                'pages/my/my/my',
+            ]
+        },
+
+        # 清关查询
+        {
+            'enabled': 0,
+            'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/ad-popup-20250401.png',
+            'link': '/pages/product/product-buy?packageCode=customs_clearance_query&tid=1012',
+            'quiet_second': 14400,
+            'pages': [
+                'pages/classification/home/home',
+                'pages/classification/calculator/calculator',
+                'pages/classification/calculator/calculator-page',
+                'pages/classification/search-by-name/search-by-name',
+                'pages/customs/customs-clearance-query',
                 'pages/my/my/my',
             ]
         }
@@ -775,7 +793,12 @@ value = {
             'enabled': 1,
             'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/home-banner-01.png',
             'link': '/pages/product/product-buy?packageCode=hs_code_member&tid=1013',
-        }
+        },
+        {
+            'enabled': 1,
+            'poster_url': 'https://xhq-wechat.oss-cn-shanghai.aliyuncs.com/ai-qgb/mp/images/ad/home-banner-02.png',
+            'link': '/pages/product/product-buy?packageCode=customs_clearance_query&tid=1013',
+        },
     ]
 }
 
