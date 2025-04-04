@@ -25,7 +25,7 @@ config = {
 redis = RedisDB(config)
 
 
-def create_qrcode(channel_id, path, remark):
+def create_qrcode(channel_id, path, remark, page):
     access_token = redis.get('wechat_access_token_aiqgb')
     # print(access_token)
     url = f'https://api.weixin.qq.com/wxa/getwxacode?access_token={access_token}'
@@ -39,7 +39,7 @@ def create_qrcode(channel_id, path, remark):
     if len(ret) < 500:
         print(ret.decode())
     else:
-        save_file = f'{channel_id}-{remark}.png'
+        save_file = f'{channel_id}-{remark}{page}.png'
 
         # 使用BytesIO将字节数据转换成文件对象
         byte_io = io.BytesIO(ret)
@@ -66,12 +66,20 @@ def main():
         #     'name': '推文',
         #     'remark': '最航运公众号推文-20250207'
         # },
-        # {
-        #     'channel_id': 1002,
-        #     'path': 'pages/classification/home/home',
-        #     'name': '个人推广',
-        #     'remark': '庄叔专属'
-        # },
+        {
+            'channel_id': 1002,
+            'page': 'home',
+            'path': 'pages/classification/home/home',
+            'name': '个人推广',
+            'remark': '庄叔专属'
+        },
+        {
+            'channel_id': 1002,
+            'page': 'calculator',
+            'path': 'pages/classification/calculator/calculator',
+            'name': '个人推广',
+            'remark': '庄叔专属'
+        },
         # {
         #     'channel_id': 1003,
         #     'path': 'pages/classification/home/home',
@@ -170,12 +178,12 @@ def main():
         #     'remark': ''
         # },
 
-        {
-            'channel_id': 1019,
-            'path': 'pages/product/product-buy?packageCode=customs_clearance_query&tid=1013',
-            'name': '名片',
-            'remark': ''
-        },
+        # {
+        #     'channel_id': 1019,
+        #     'path': 'pages/product/product-buy?packageCode=customs_clearance_query&tid=1013',
+        #     'name': '名片',
+        #     'remark': ''
+        # },
     ]
 
     for channel in channels:
@@ -183,9 +191,10 @@ def main():
         path = channel['path']
         name = channel['name']
         remark = channel['remark']
+        page = channel['page'] or ''
 
         path = path + f'?tid={channel_id}'
-        create_qrcode(channel_id, path, remark)
+        create_qrcode(channel_id, path, remark, page)
         create_sql(channel_id, name, remark)
 
 

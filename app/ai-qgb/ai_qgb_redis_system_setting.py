@@ -277,7 +277,7 @@ value = {
         'quota_used_up_tip': '您的搜索条数已用完',
     },
     'special_tariff': {
-        'fix_rate': '',  # 对中加征税率
+        'fix_rate': '',  # 对中加征税率  已灌入后端数据，前端无需再使用该规则
         'exclude_search_by_name': 1,
         'exclude_pattern': '^980200(40|50|60|80)\\d+$',
         'special_code': '99030124',
@@ -308,7 +308,6 @@ value = {
                 'effectiveDate': '20250204'
             },
         ],
-
     },
     'special_tariff_list': [
         {
@@ -329,6 +328,7 @@ value = {
                             'patterns': ['^\\d+$'],
                             'type': 'include',
                         },
+
                     ],
                     'special_code': ['99030101/99030105', '99030102', '99030103'],
                 }
@@ -438,6 +438,7 @@ value = {
                         {
                             'custom': 'usmca',  # hscode 前 8 位存在于 usmca 中
                             'type': 'include',
+                            'must_special_codes': ['99030101/99030105'],
                         }
                     ],
                     'special_code': ['99030104'],  # 豁免
@@ -469,6 +470,7 @@ value = {
                         {
                             'custom': 'usmca',  # hscode 前 8 位存在于 usmca 中
                             'type': 'include',
+                            'must_special_codes': ['99030110/99030115'],
                         }
                     ],
                     'special_code': ['99030114'],  # 豁免
@@ -741,7 +743,55 @@ value = {
                     },
                 ],
             },
-        }
+        },
+        {
+            'fix_rate': '25%',  # 汽车加征 25%
+            'rules': [
+                {
+                    'code_matchers': [
+                        {
+                            'patterns': [
+                                '^(87032201|87033101|87034000|87037000|87042101|87045100|87032301|87033201|87035000|87038000|87043101|87046000|87032401|87033301|87036000|87039001|87044100)\\d+$'],
+                            'type': 'include',
+                            'exclude_special_codes': ['99030101/99030105', '99030110/99030115', '99038567', '99038568', '99038507', '99038508', '99038190',
+                                                      '99038191', '99038502', '99038504', '99038187', '99038189'],
+                        },
+                    ],
+                    'special_code': ['99039401'],
+                }
+            ],
+
+            'special_describes': {
+                '99039401': [
+                    {
+                        'specialDescribeCn': '<b>9903.94.01（加征）</b><br>除税号9903.94.02、9903.94.03和9903.94.04外，自2025年4月3日起，本分章注释33所规定的乘用车（轿车、运动型多用途车（SUV）、跨界多用途车（CUV）、小型货车及货运厢式车）和轻型卡车，按照本分章美国注释33(b)款的规定执行。',
+                        'specialDescribeEn': 'Except for 9903.94.02, 9903.94.03, and 9903.94.04, effective with respect to entries on or after April 3, 2025, passenger vehicles (sedans, sport utility vehicles, crossover utility vehicles, minivans, and cargo vans) and light trucks, as specified in note 33 to this subchapter, as provided for in subdivision (b) of U.S. note 33 to this subchapter. ',
+                        'effectiveDate': '20250403',
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.94.02（豁免）</b><br>自2025年4月3日起，本分章美国注释33(c)款所规定的商品正式生效并适用相关规定。(i) 所有符合本注释(b)款所列《美国统一关税表》（HTSUS）税目规定的商品，但不包括乘用车（轿车、运动型多用途车（SUV）、跨界多用途车（CUV）、小型货车及货运厢式车）和轻型卡车；(ii) 本注释(d)款所述的乘用车和轻型卡车中的美国原产部分，需经商务部长批准后适用。',
+                        'specialDescribeEn': 'Effective with respect to entries on or after April 3, 2025, articles as provided for in subdivision (c) of U.S. note 33 to this subchapter.(i) all entries of articles classifiable under provisions of the HTSUS enumerated in subdivision (b) of this note, but that are not passenger vehicles (sedans, sport utility vehicles, crossover utility vehicles, minivans, and cargo vans) and light trucks; as well as (ii) the U.S. content of passenger vehicles and light trucks described in subdivision (d) of this note, upon approval from the Secretary of Commerce.',
+                        'effectiveDate': '20250403',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.94.03（豁免）</b><br>自2025年4月3日起，本分章美国注释33(d)款所规定的特定乘用车和轻型卡车正式生效并适用相关规定。适用于符合《美墨加协定》（USMCA）特殊关税待遇的乘用车和轻型卡车中的非美国原产部分，需经商务部长批准，方可仅对汽车的非美国原产部分适用25%的从价税税率。',
+                        'specialDescribeEn': 'Effective with respect to entries on or after April 3, 2025, certain passenger vehicles and light trucks, as provided for in subdivision (d) of U.S. note 33 to this subchapter.<br>Applies to the non-U.S. content of passenger vehicles and light trucks eligible for special tariff treatment under the United States-Mexico-Canada Agreement (USMCA), upon approval from the Secretary of Commerce to apply the 25% ad valorem rates of duty exclusively to the value of the non-U.S. content of the automobile.',
+                        'effectiveDate': '20250403',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    },
+                    {
+                        'specialDescribeCn': '<b>9903.94.04（豁免）</b><br>自2025年4月3日起，本分章美国注释33(e)款所规定的特定乘用车和轻型卡车正式生效并适用相关规定。适用于所有国家的乘用车和轻型卡车，这些车辆符合上述税号或子目分类要求，并且其生产年份至少早于进口年份25年。',
+                        'specialDescribeEn': 'Effective with respect to entries on or after April 3, 2025, certain passenger vehicles and light trucks, as provided  for in subdivision (e) of U.S. note 33 to this subchapter.<br>Applies to all entries of passenger vehicles and light trucks from all countries classifiable in the headings or subheadings listed above that were manufactured in a year at least 25 years prior to the year of the date of entry.',
+                        'effectiveDate': '20250403',
+                        'exempting': '有',
+                        'specialInfo': '有'
+                    },
+                ],
+            },
+        },
     ],
     'calculator': {
         'mpf': {  # 商品加工费
